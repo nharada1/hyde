@@ -1,0 +1,12 @@
+# EECS 598 - Data Science for Medicine
+## Fall 2014 - Zeeshan Syed
+
+### School Description
+With increasing amounts of medical data becoming available through clinical electronic health record (EHR) systems and consumer-facing fitness and wellness-related wearables there is an opportunity to significantly reduce the burden imposed by major diseases in a data-driven manner. This course focuses on computational advances offering significant improvements in our ability to understand, diagnose, and treat major healthcare conditions. We will explore several foundational topics in data science for medicine, including data representation, data manipulation, data analysis, and data visualization with a review of organ system physiology and common medical data elements. The class will focus on breadth with topics being covered briefly instead of a focus on any single topic in depth to provide an opportunity to sample and apply data science techniques. 
+
+This course has a substantial hands-on component. Students will be expected to supplement theory in data science for medicine with a small number of problem sets and a semester long project on real-world medical data with close mentoring from clinical instructors at the University of Michigan Hospital and the Henry Ford Hospital. Students will be encouraged to think creatively about traditionally hard problems and required to perform independent research. Students will also be exposed to research and potential entrepreneurship opportunities beyond the class.
+
+The prerequisites for the course include an ability to program and manipulate datasets (EECS281 or equivalent) and knowledge of probability and statistics (STATS250 or STATS412 or equivalent). Knowledge of machine learning and signal processing is not required but may be helpful.
+
+### Meets
+Thursday 3:00pm - 6:00pm in Herbert H. Dow Building room 1017
