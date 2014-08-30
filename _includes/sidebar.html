@@ -11,17 +11,13 @@
 
     <nav class="sidebar-nav">
       <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
+      <a class="sidebar-nav-item" href="{{ author.url }}">Blog</a>
 
-      {% assign pages_list = site.collections %}
-        {% for node in pages_list %}
-            {{ node }} 
-        {% endfor %}
-
-      {% for collection in site.collections %}
-        { node }
+      <p></p>
+      {% for item in site.categories %}
+          <a class="sidebar-nav-item" href="/categories/{{ item | first }}">{{ item | first | upcase }}</a> 
       {% endfor %}
 
-      <a class="sidebar-nav-item" href="{{ author.url }}">Blog</a>
     </nav>
 
     <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>

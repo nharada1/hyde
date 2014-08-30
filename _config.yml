@@ -18,16 +18,3 @@ paginate:           5
 
 # Custom vars
 version:            2.1.0
-
-# Classes
-collections:
-    eecs492:
-        name:       'Intro to Artifical Intelligence'
-        professor:  'Emily Mower Provost'
-        semester:   'F2014'
-        output:     true
-    eecs598:
-        name:       'Data Science for Medicine'
-        professor:  'Zeeshan Syed'
-        semester:   'F2014'
-        output:     true
