@@ -12,7 +12,7 @@ baseurl:            /
 
 author:
     name:           'Nate Harada'
-    url:            https://blog.nateharada.com
+    url:            http://blog.nateharada.com
 
 paginate:           5
 
