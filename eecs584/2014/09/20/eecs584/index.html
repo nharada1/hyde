@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Paper Review - A Critique of ANSI SQL Isolation Levels &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Paper Review - A Critique of ANSI SQL Isolation Levels</h1>
+  <span class="post-date">20 Sep 2014</span>
+  <p>The ANSI SQL standard defines isolation levels in databases in terms of what is allowed to occur in the database. In this influential 1995 paper, the authors argue that this type of specification fails to properly describe isolation levels, and will allow certain corner cases to occur anyway. In the ANSI standard, phenomena are expressed in a written, English form that allows room for interpretation. This paper claims that isolation, instead of being expressed in terms of phenomena, should rather be expressed in terms of locking levels. The authors also characterize locking in a rigorous and more mathematically formal way that removes ambiguity from isolation levels. The mathematical formalism introduced to SQL isolation is an important contribution introduced by this paper, and terminology introduced here such as “loose” vs “strong” phenomena interpretation creates a framework that allows the authors to offer criticisms of the ANSI SQL standard.</p>
+
+<p>The mathematical tools introduced in this paper allow the authors to introduce additional phenomena types: cursor stability and snapshot isolation. Of particular importance is snapshot isolation, which is widely deployed in modern database systems. Snapshot isolation offers better performance than serializable isolation while offering most of the same protections against anomalies. The paper shows, however, that snapshot isolation is <em>not</em> the serializable. This fact implies a failing of the ANSI SQL isolation levels - snapshot isolation exhibits no prohibited phenomena as defined by the ANSI standard, yet is not serializable and can still allow errors. The paper also offers a short description of other multi-version systems and compares them to snapshot isolation.</p>
+
+<p>I like that this paper offers such a comprehensive analysis of isolation levels and that it offers precise definitions where ANSI failed. I would be interested to see how database definitions such as ANSI have adapted in the face of new evidence. A cursory Google search indicated that although this paper has been well cited and well received, there has not been an overhaul in the ANSI isolation level standards. I also think that the “first-committer-wins” feature seems like an easy but limiting solution to preventing lost updates in the snapshot transaction system. In a system with heavy latency or transaction costs, it seems that the DBMS could possibly resolve conflicts automatically. This would require some sort of merging algorithm, which is beyond the scope of this paper and would have tradeoffs in lost accuracy. </p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

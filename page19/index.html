@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/04/eecs584/">
+        Paper Review - C-Store: A Column-oriented DBMS
+      </a>
+    </h1>
+
+    <span class="post-date">04 Oct 2014</span>
+
+    <p>In what seems to be a common trend, this paper introduces yet another radical database architecture reimagining, again spearheaded by the prolific Michael Stonebraker. C-Store is a shared nothing column oriented database, designed for OLAP workloads with a focus on high read throughput and low read latency. This is in contrast to traditional DBMSs which are instead optimized for write efficiency. Written in 2005, this paper borrows heavily from other ideas in the database space, but is the first design to present a comprehensive architecture for a column store system that leverages modern computational systems such as shared nothing designs.</p>
+
+<p>The core of C-store is the use of a column oriented data model, which eschews traditional row indexing in order to provide better read access in cases where a user is accessing a small subset of columns over a large quantity of tuples. C-Store accomplishes this by using projections, which are sorted subsets of attributes of a table. The database may contain any number of projections, but each column in must be present in at least one. By using column based projections, C-Store offers faster read performance for queries that read data mainly from columns, as many ad-hoc queries tend to do in analytic processing. For example, it’s more likely for a client to request the first names of all clients than it is to request a client by name when doing data analysis. The paper gives an overview of other parts of the system, including a look at the snapshot isolation supported by the DBMS and the performance enhancements such as column compression and column-oriented optimizers and executors. Components of interest are the hybrid architecture for reading and writing, which consists of two separate storage utilities - one for reading and one for writing. The other interesting discussion is that of k-safety and the implementation of a shared nothing architecture. The paper ends with performance analysis (which is eye opening if taken at face value) as well as a look at systems that inspired C-Store.</p>
+
+<h3 id="strengths">Strengths:</h3>
+<p>C-Store’s use of column based projections offers an innovative solution to column based storage. While offering the obvious advantages of fast read access of OLAP workloads, the key insight of these projections is the use of overlap to facilitate k-safety. Because each projection (which is in essence a restricted materialized view) contains data that is non-dependent on the other projections, a given column can be represented multiple ways. By doing this the database can contain redundant columns and allow K nodes to fail while staying operational. </p>
+
+<p>The use of read stores and write stores is another clever innovation. C-Store compromises between read performance and writability by offering a small column store for writes to take place in. This store can be thought of as a staging area, or buffer for writes. Stored in memory, this buffer is eventually written to the database. By offering only snapshot isolation, the potential for lock contention and isolation failure is reduced with this eventually consistent system. This hybrid is especially useful because the column store requires many operations to do small updates.</p>
+
+<h3 id="weaknesses">Weaknesses:</h3>
+<p>As with many shared nothing systems, the problem of how to distribute redundant data across nodes is a hard one. Determining the physical layout in C-Store requires the database administrator to maintain K-safety while also keeping performance optimal. This is devastating for a real world system, and an automated tool would be required for this system to function in a real world scenario. Another glaring weakness is the inability to operate efficiently on workloads unforeseen by the installer. If there is a scenario where we must do a large write, we will be horribly inefficient. In the same way, executing and transactional processing workload will cause the system to slow dramatically.  </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/10/02/eecs492/">
+        Propositional Logic and Inference
+      </a>
+    </h1>
+
+    <span class="post-date">02 Oct 2014</span>
+
+    <h2 id="knowledge-based-agents">Knowledge Based Agents</h2>
+<p>Knowledge based agents reason over the knowledge base to come up with the best action. The hard thing is how to encode our knowledge in the machine.</p>
+
+<p><strong>Entailment</strong> - Relation between sentences where you can say one follows logically from another. If <script type="math/tex">KB \mid= \alpha</script> we say that the knowledge base <em>entails</em> alpha. </p>
+
+<p>The basic way of checking for relationships is model checking, which just enumerates all models where <script type="math/tex">\alpha</script> is true.</p>
+
+<ul>
+  <li>Truth preserving - Only derive entailed sentences</li>
+  <li>Complete - Can derive <strong>all</strong> sentences that are entailed</li>
+</ul>
+
+<h2 id="sentences">Sentences</h2>
+
+<ul>
+  <li>Sentence is either an AtomicSequence or a ComplexSentence</li>
+  <li>Atomic sentence is either True, False, or a Symbol</li>
+  <li>Symbol is P, Q, R, etc</li>
+  <li>A complex sentence includes logical operators</li>
+</ul>
+
+<p>We also need semantics that determine the interpretation of symbols. Review logical prepositions here, aka NOT, AND, OR, IMPLIES, EQUALITY.</p>
+
+<p>For the wumpus world, we can directly encode rules and develop a complete knowledge base. This method of model checking works but is infeasible. <strong>Every known inference algorithm for propositional logic has worst case exponential complexity.</strong> 
+## Inference
+Inference is the process by which sentences are derived from others. For a given inference method we want it to be sound (no false conclusions) and complete (no missing conclusions). So what inference methods can we implement?</p>
+
+<h3 id="model-checking">Model Checking</h3>
+<p>Generic inference, intuitive but not implementable. We literally just try everything and check that alpha is valid. We want to use a <em>proof based</em> method instead to eliminate model checking.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/09/30/eecs492/">
+        Logical Agents
+      </a>
+    </h1>
+
+    <span class="post-date">30 Sep 2014</span>
+
+    <h2 id="finish-up-constraints">Finish up constraints</h2>
+
+<h3 id="forward-checking">Forward Checking</h3>
+<p>We can reduce our search by forward checking - whenever a variable X is assigned we examine each unassigned Y and delete Y that doesn’t fit constraints. Forward checking is good, but we don’t actually look ahead to all of our constraints; FC is almost a greedy search.</p>
+
+<p>If we maintain arc consistency, we’ll be more stringent and search space is even smaller. </p>
+
+<h3 id="backjumping">Backjumping</h3>
+<p>The way we knew in the 4queen problem in notes on where to restart is because we knew where to backjump. To do this we’ll create a conflict set containing the past conflicts.</p>
+
+<h2 id="logic">Logic</h2>
+<p>We want to be able to reason about the world in a way that lets us derive new facts about the world without full knowledge. In the logical framework we’ll have a knowledge base, and we want to augment and query it somehow. As an example of logic, we’ll introduce wumpus world:</p>
+
+<p><em>An agent runs through the maze, avoiding the wumpus and pits, while looking for gold. Additionally, the agent can shoot the wumpus (but only has one arrow).</em></p>
+
+<p>In this world the agent can perceive things in adjacent squares to objects. World is discrete, static, single-agent, sequential, partially observable (arrow and wumpus states are not given by world). We’ll cover more next week. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/28/eecs584/">
+        Paper Review - Fast Algorithms for Mining Association Rules
+      </a>
+    </h1>
+
+    <span class="post-date">28 Sep 2014</span>
+
+    <p>Discovering associations in data allows businesses and scientists to form critical insights. In a business, association between buying habits of customers can create customized catalogues or online experiences. In a biology lab, associations between different chemicals or proteins can signify interesting research directions. Traditional association mining tends to be quite slow as it requires multiple passes over the data which is superlinear in time. This paper introduces <em>Apriori</em> mining, and two derivative algorithms, <em>Apriori-Tid</em> and <em>AprioriHybrid</em> that reduces the number of passes over a database required to count frequent itemsets.</p>
+
+<p>The primary strength of this paper is the algorithm’s ability to use previous sets (apriori information) to quickly find larger sets. All of the algorithms introduced in the paper generate candidate itemsets by using only the itemsets found to be large in previous passes. Because any subset of a large itemset must be large, the algorithm can join smaller sets and prune the search space by removing subsets that are not large. The paper also introduces the Tid and Hybrid algorithms to improve performance when disk access is expensive or to reduce passes by sometimes using Tid and sometimes using the usual algorithm. </p>
+
+<p>The authors include the precise algorithms for their contribution, as well as a substantial look at the performance of the apriori algorithm versus the competing best methods. Not only does apriori execute faster, but it also scales better with database size, which is even more important in today’s world of big data sets. I like that the authors show the linearity of their algorithm via experimental evidence. While not as rigorous as a formal proof, it would be enough to make me confident choosing their algorithm in a product.</p>
+
+<p>Association mining has inherent weaknesses that would require additional extensions to address. Common associations may not qualify as interesting, especially when associations are a result of the domain (for example, if a store requires two items be bought together). Additionally, data must be categorical, although this limitation can be fixed via binning. One final weakness that comes to mind is that many times there are associated quantities with items (such as amount of gas purchased). This algorithm would fail to incorporate this value, and simply repeating the item in the dataset will not work for an item with such fine granularity.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/27/eecs584/">
+        Paper Review - Data Cube: A Relational Aggregation Operator Generalizing Group-By, Cross-Tab, and Sub-Totals
+      </a>
+    </h1>
+
+    <span class="post-date">27 Sep 2014</span>
+
+    <p>Traditional SQL statements for business intelligence tend to require data aggregation in the query results. This is generally done with GROUP BY, which allows the user to organize the returned data by certain column values. This presents a problem when attempting to “roll-up” data, or aggregate data over multiple levels. Note that unless otherwise stated, this review will be written from the perspective of the time of writing. The current SQL standard now supports datacubes, a testament to the paper’s influence. </p>
+
+<p>This paper’s primary contribution is the “CUBE” operator, which allows a user to aggregate table results over multiple dimensions, all the way to the largest possible view. The authors provide intuition to the results of this operation via the “ALL” keyword which acts as a placeholder in tuples where the actual value of the row is in a different column. For example, the final row in a 3d data cube query might be “ALL ALL ALL 941”, where 941 represents a sum over all the other columns, and the ALL values are inconsequential (it makes no sense to have a value for an aggregation of categorical data, for example). The paper also introduces the “ROLLUP” operator, which allows a roll-up report by producing super-aggregates instead of a full cube. The paper also provides the algebra of the operators it discusses (GROUP BY, ROLLUP, and CUBE), as well as providing a syntax proposal for them.</p>
+
+<p>One interesting thing to note is that the CUBE is the spanning case for the ROLLUP and GROUP BY operators; that is that ROLLUP and GROUP BY are the degenerate cases. The paper ends with a discussion of the ALL value, including the decision to note actually include it in the recommendation, and a look at other details of implementation. These details include decorations (columns dependent on grouping columns not in the GROUP BY), snowflake queries (a schema with many aggregation granularities), and details on how to compute ROLLUPs and CUBEs.</p>
+
+<p>Strengths:</p>
+
+<p>This paper acts as the seminal paper for data cubes, and as a result has had much influence on RDBMS design in the years after its publication. Including the implementation details is especially important, and the look at various classes of aggregate functions (distributive, algebraic, holistic) would be extremely helpful to me were I to implement this functionality myself. From a readability standpoint the paper does a good job of including examples and details.</p>
+
+<p>Weaknesses:</p>
+
+<p>This paper was written in 1997, when data analytics was still in its infancy. For larger datasets, like those common in modern companies, the data cube presents a massive amount of data to the user. While good for small queries, data cubes likely present too much information to be useful. Additionally, the paper fails to adequately discuss the expansion of the cube to higher dimensions, although it is assumed the cube is actually a hypercube. I expect, however, that very high dimensional cubes come with additional challenges such as how to aggregate the data in a meaningful way. Lastly, the cubes as they are are not flexible, requiring the aggregate functions defined by the DBMS. The authors assert that they attempted to allow the user to specify aggregate functions, but found it too troublesome. In modern business analytics, this assumption is probably untrue.</p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page20">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page18">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>

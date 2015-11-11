@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Paper Review - CryptDB: Processing Queries on an Encrypted Database &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Paper Review - CryptDB: Processing Queries on an Encrypted Database</h1>
+  <span class="post-date">17 Nov 2014</span>
+  <p>Privacy is an ever-increasing concern, especially in today’s always connected and cloud based world. Companies have databases with terabytes of consumer data, many of which are exploitable and unsafe. Even in cases where exploitation is not easy, there are always additional zero-day vulnerabilities (such as Heartbleed and Shell Shock) that present security threats and challenges. Thus, an encrypted database is a powerful guarantee that a user’s data will remain secure, even in the event of internal compromise. This paper introduces CryptDB, a database proxy layer and extension that secures existing databases. The ideas presented are designed to work over any commercial database, although the authors use MySQL.</p>
+
+<p>CryptDB’s primary contribution is the idea of multiple security layers to process queries and expose only as much information is required to get a result to the DBMS. Thus, the DBMS actually has no idea what data it is storing, relying on a secured proxy to handle interactions with the user. The authors use a large variety of existing security ciphers, providing completely random encryption, order-preserving encryption, homomorphic (function preserving), word search, and join encryption. Of special note, the OPE exposes some data to the client (up to half in the worst case). The homomorphic encryption is only additively homomorphic (fully homomorphic encryption is still in its infancy). The join encryption is specially designed for CryptDB and introduces a primitive called JOIN-ADJ (adjustable join) to support joining columns unknown apriori by the proxy. The proxy operates on a per-user basis and provides a separate session for each user so that a compromised key cannot expose the entire database. This design a strong because it also prevents a malicious user from exposing the database in a cloud system where users are not fully trusted. CryptDB is built atop mysql-proxy, and includes some UDFs to the underlying MySQL implementation.</p>
+
+<p>This raises the first point of vulnerability and weakness with the system - if the underlying operating system is the vulnerable system, the proxy is most likely going to be affected as well. The second weakness is that simply using the system will resolve more and more of the underlying information to the DBMS (as additional security layers are required) and will eventually expose almost all of the data eventually. This is because the order-preserving encryption leaks up to half of the data bits in the worst case. Thus, a workload could in theory expose the entire database with enough queries. The authors claim to be working on this problem and if they can fix it this will be a big improvement. Still though, eventually the lowest level of encryption will be used on all the data with enough workload.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

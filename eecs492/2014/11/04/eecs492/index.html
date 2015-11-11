@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Uncertainty &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Uncertainty</h1>
+  <span class="post-date">04 Nov 2014</span>
+  <h2 id="some-final-planning">Some Final Planning</h2>
+
+<h3 id="contingent-planning">Contingent Planning</h3>
+<p>If we don’t know about a conditional before hand we need to gather information before planning more actions. This leads to continuous replanning where we can’t plan everything beforehand. This is generally how things work in the real world and with real time. In this case we want <strong>online replanning</strong> to change our action plan as new information comes in. This requires <strong>execution monitoring</strong> in the real world. </p>
+
+<h3 id="multi-agent-planning">Multi-agent Planning</h3>
+<p>Having multiple agents whose actions depend on each other introduces complexity. There are a few types of multi-actor setting, but the most complicated is <strong>multiagent</strong> which creates a shared nothing system. Our focus is on multiple simultaneous actions. The way we do this is to decouple actions from actors as much as possible. We want to be <strong>loosely coupled</strong>. One common way to reconcile joint solutions is to use social laws and communication. An example is in sports - play on your side of the court and communicate when things become questionable (“I got it!”).</p>
+
+<h2 id="probability-yay">Probability (yay)</h2>
+<p>Describes uncertainty. Cool.</p>
+
+<p>We talk about probability in AI in terms of “possible worlds”, aka the <strong>sample space</strong>. </p>
+
+<h3 id="some-really-chill-axioms">Some really chill axioms:</h3>
+
+<p>Probability expressed from 0 to 1:
+<script type="math/tex"> 0 \leq P(\omega) \leq 1 </script></p>
+
+<p>Probability sums to 1:
+<script type="math/tex"> \sum\limits_{\omega \in \Omega} P(\omega) = 1 </script></p>
+
+<p>Probabilities add for mutually exclusive events:
+<script type="math/tex"> P(a \vee b) = P(a) + P(b) </script></p>
+
+<p>Probabilities add but must subtract intersect for non-mutually exclusive events:
+<script type="math/tex"> P(a \vee b) = P(a) + P(b) - P(a \wedge b) </script></p>
+
+<h3 id="types-of-probabilities">Types of Probabilities:</h3>
+<p>Priors: Unconditional chances
+<script type="math/tex">P(X=x)</script></p>
+
+<p>Conditional Probabilities: 
+<script type="math/tex">P(a|b) = \frac{P(a \wedge b)}{P(b)}</script></p>
+
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

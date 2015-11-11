@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/11/eecs584/">
+        Paper Review - Big Table: A Distributed Storage System for Structured Data
+      </a>
+    </h1>
+
+    <span class="post-date">11 Oct 2014</span>
+
+    <p>With the rise of monopoly internet companies, a few behemoths generate data on scales unexpected by researchers. BigTable, the brainchild of the Google research team, is an example of a technology developed purely for application. With a large research budget and petabyte scale data, Google designed BigTable to work across hundreds to thousands of commodity machines. BigTable is a non-relational database that uses a three dimensional indexing system to store data - two dimensions are string keys, and the third is a time based index. This structure allows BigTable to naturally fit the data usage patterns of many products in the Google domain, where data changes across time on a massive scale (ie Street View, Google Earth, Web Indexing, etc). </p>
+
+<p>The largest contribution of this paper is the data model, which introduces time indexing as a first class citizen of the database. It’s important for the reader to note that BigTable is <em>not</em> a database in the conventional sense, and is instead a sparse, multidimensional, sorted map. In most cases, the client is designed in such a way that commonly accessed information is stored nearby. For example, webpages can be stored as com.domain.subdomain, and by doing so will keep subdomains nearby on disk. BigTable is built upon several other Google services, specifically the Google File System, the Chubby distributed lock system, and the Google SSTable file format. The system consists of thousands of “tablets”, hundreds of which are stored on each tablet server. Like the Google File System, in most cases the client will communicate directly with these tablet servers, talking to the master server only when it needs an update on cached tablet server information. Tablets distribute disk data across machines, and are stored via the underlying SSTable file format. Google also introduces performance enhancements, such as bloom filters for tablet membership and compression inside of SSTables using a novel compression algorithm designed to trade CPU time for compression efficiency. </p>
+
+<p>BigTable shares many similarities with C-Store, and the authors mention this directly. One important inspiration from C-store is the use of a hybrid read/write system to write data to disk. BigTable uses a “memtable” to write data to directly, and then transfers that memory based table to disk over time. One major strength of BigTable is its robustness. Servers of any type can fail and the system will recover quickly. By using many small tablets, the remaining machines can easily take a small part of one machine’s work. Additionally, the commit-log implementation is quite smart - the system uses one massive commit log per tablet server, but on recovery sorts the log to allow sequential read by each machine. </p>
+
+<p>The commit-log is likely a major weakness of the system as well - the tablet server writes its own commit log, and it seems as though if a system crashed and was unrecoverable that its data would be unrecoverable as well. The GFS provides K-safety for the data itself, so this situation will not completely lose data. Additionally, the method of using multiple threads to write the log seems like it wouldn’t fix write issues in many cases. If one thread is writing slowly, there is likely an underlying cause and switching to another thread for writes will only delay the onset of the larger problem. One final weakness of this system is that it relies on the multidimensional structure it provides, as well as the client to ensure that data access is efficient. For example, if the user had decided to store subdomain.domain.com instead of the other way around, access would be slow for nearby subdomains. Thus, this system is only truly useful for someone with technical knowledge, and would not be as useful for non-technical business analysts. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs598/2014/10/09/eecs598/">
+        Data Analysis II
+      </a>
+    </h1>
+
+    <span class="post-date">09 Oct 2014</span>
+
+    <h2 id="clustering">Clustering</h2>
+
+<h3 id="k-means">K-Means</h3>
+<p>We’ll randomly assign some centroids to data, assign points to them, and iteratively cluster. Good because it’s simple, but choosing the starting point can be an issue. Density must be “bloblike” and we have to choose starting parameters to begin with. The process is stochastic and so not reproducible. </p>
+
+<h3 id="hierarchical-clustering">Hierarchical Clustering</h3>
+<p>We start with each point as a cluster and we merge clusters repeatedly. If we merge the closest clusters repeatedly we’ll eventually end up with a tree of clusters. Once we have a cluster, how do we decide which method to compare the distances between them? We can use minimum, maximum, avg, or centroid.</p>
+
+<h3 id="fuzzy-clustering">Fuzzy Clustering</h3>
+<p>Basically K-means but we assign membership to multiple sets and allow each point to “maybe” be in a cluster.</p>
+
+<h2 id="feature-selection">Feature Selection</h2>
+<p>We want to rank features for how well they do in our algorithms. How do we choose the features? We can use correlation, try each one, etc. Correlation only lets us look at one feature at a time but in multiple dimensions we might be able to classify. In most cases we’ll use forward or backward feature selection.</p>
+
+<h3 id="principal-component-analysis">Principal Component Analysis</h3>
+<p>We try and extract uncorrelated features by creating a set of basis functions in the original feature space. We want to maximize the variance for each component with respect to the original data.</p>
+
+<h3 id="multidimensional-scaling">Multidimensional Scaling</h3>
+<p>We want to capture the distance between points in our lower dimensional representation. In MDS we only require a notion of how different points are. This is considered a type of embedding.</p>
+
+<h3 id="manifolds">Manifolds</h3>
+<p>What do we do when the distribution of values follows a structured layout, aka a manifold. In this case the Euclidian distance no longer applies. Many times we’ll just embed a manifold into Euclidian space. A common way to do this is via isomap, where we look at the distance over a graph of the points in manifold space.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/10/09/eecs492/">
+        First Order Logic Day 2
+      </a>
+    </h1>
+
+    <span class="post-date">09 Oct 2014</span>
+
+    <h2 id="the-move-to-first-order-logic">The Move to First Order Logic</h2>
+<p>We want to move away from propositional logic. Propositional logic is good because it’s unambiguous but too specific - we want to allow variables in the logic. </p>
+
+<p>In first order logic we have objects (rooms, dogs, etc) and relations. Relations test a property of one or more objects, and with <strong>no arguments</strong> these are equivalent to propositional logic. </p>
+
+<p>Relations - properties that are links between variables
+Function - input a tuple, output a value</p>
+
+<p>First order logic is the same as propositional logic with variables. Obviously first order logic is more complicated, but it’s in fact <em>much</em> more so. There are new variables in FOL called qualifier variables:</p>
+
+<p><strong><script type="math/tex">\forall</script></strong> - Says “for all”, and is equivalent to a big conjunction.</p>
+
+<p><strong><script type="math/tex">\exists</script></strong> - Says “there exists”, equivalent to a big disjunction.</p>
+
+<p>We introduce restrictions to reduce complication:</p>
+
+<ul>
+  <li>Unique-names assumption - Two names cannot be the same object</li>
+  <li>Closed-world assumption - Any sentences unknown to be true are false</li>
+  <li>Domain closure - There are no more domain objects than the ones specified</li>
+</ul>
+
+<p>These assumptions allow us to more concisely specify logic. </p>
+
+<h2 id="quantifiers">Quantifiers</h2>
+<p>We’ll use quantifiers using an ASK/TELL interface. We can tell explicit facts or we can tell via variables. We can ask for statements, or we can ask for variables, aka <script type="math/tex">\exists</script> Person(x) <script type="math/tex">\Rightarrow</script> {x/Robert} and {x\John}.</p>
+
+<h2 id="inference">Inference</h2>
+<p>Universal instantiation lets us infer any sentence by substituting a ground term for the variable. Aka:</p>
+
+<script type="math/tex; mode=display">\frac{\forall \nu \alpha}{Subst(\{\nu/\kappa\},\alpha)}</script>
+
+<p>The same thing applies for <script type="math/tex">\exists</script>. Basically we reduce a higher order function by partially applying an argument.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/10/07/eecs492/">
+        First Order Logic
+      </a>
+    </h1>
+
+    <span class="post-date">07 Oct 2014</span>
+
+    <h2 id="finish-prepositional-logic">Finish Prepositional Logic</h2>
+<p>A set of entailed sentences can only increase as sentences are added. Conclusions from inference rules are never defeated by further inference, thus the search will never need to backtrack. This means we don’t adapt well because we can only become more specific and we’ll think the entire history is true. <strong>Everything we know now will remain true forever</strong>. </p>
+
+<p>What does it mean to be complete? We can reach any goal in the search space. We do this by resolution, which is a complete inference algorithm when coupled with any complete search algorithm. We can use unit resolution to split up our knowledge base:</p>
+
+<script type="math/tex; mode=display"> \frac{(c \vee a_1 \vee a_2 ... \vee a_n) \wedge (~c \vee b_1 \vee b_2 ... \vee b_k)}{a_1 \vee a_2 ... \vee a_n \vee b_1 \vee b_2 ... \vee b_k} </script>
+
+<p>To actually use this in an algorithm we must put this into conjunctive normal form, aka each sentance is a set of literals combined with or. We can use resolution refutation to try and prove the opposite of a statement. Eg, if we get a sentence <script type="math/tex">P_{1,2}</script> we will try and prove <script type="math/tex">\neg P_{1,2}</script>. </p>
+
+<p>Resolution is powerful, but we may not always need the full strength (and thus full computational complexity). We can introduce restrictions on it by assuming either horn or definite clauses: forward or backward chaining. </p>
+
+<h2 id="chaining">Chaining</h2>
+<p>Forward chaining maintains for each rule a count of unsatisfied premises. We fill a queue with known facts, and go through the queue, inferring rules and reducing the count associated, adding new rules back in.</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/05/eecs584/">
+        Paper Review - The Gamma Database Project
+      </a>
+    </h1>
+
+    <span class="post-date">05 Oct 2014</span>
+
+    <p>This paper details the Gamma Database, a groundbreaking DBMS designed for shared nothing machines. Unlike the other attempts at shared nothing databases at the time of writing (which was the late 80s), the Gamma project was designed to scale linearly with the number of nodes added. This was a revolutionary achievement, as previous shared nothing machines were not entirely decentralized and still ran into single-node bottlenecks if the number of machines was too high. Gamma did this by using novel algorithms for horizontal partitioning and parallel hash algorithms.</p>
+
+<p>The Gamma paper is lengthy and so in the interests of brevity I’ll gloss over details. By the time this paper is released, the Gamma database project is actually on version 2.0. The new architecture uses a 32 processor hypercube from Intel with enough RAM to provide adequate buffering. The authors had to develop their own operating system to support their database, an impressive feat in itself. Gamma stores its data in horizontal partitions, which allows the system to exploit all the bandwidth of the disk subsystems. One thing I find interesting is that the authors were willing to admit their mistake in declustering all relations across all nodes. They advocate another system to decluster, based on “heat” of the relation (in COPE88). Generally authors do not like admitting that they are wrong in academic writings, and I think it’s commendable these authors are willing to do so.</p>
+
+<p>One strength of this paper is the authors proposal to use hash-based parallel algorithms to scale up query processing. By decentralizing data page processing throughout the system, Gamma avoids a potential bottleneck that its predecessor would frequently encounter. The paper outlines their multiprocessor join (and select) algorithms later in the document. The intuition behind the join operators attempts to combine relations into disjoint buckets via hashing. These buckets hold all tuples with the same value attribute. The authors outline sort-merge, Grace, Simple, and Hybrid algorithms for parallel joins. Each of these algorithms has already been published in a paper, so this proposal simple acted to aggregate the results into a real system. While on the surface this seems like a weakness of the paper, without an architecture these ideas would possibly have languished in obscurity. </p>
+
+<p>The paper also outlines the locking mechanism used by Gamma, which in my eyes is the weakest and most outdated part of the paper. The centralized deadlock detection algorithm proposed introduces a bottleneck into the system, and seems quite heavy duty to me. I think part of the reason for this is the time the paper was written in - seek and write times were much longer and conflicts were likely to occur. The log algorithm also appears slow on recovery, as all data must be forwarded to each recovering node. </p>
+
+<p>I do like that the system employs “chained declustering” to ensure availability in the event of a node failure. This thought is a predecessor of K-safety and is a requirement in a modern system. The authors haven’t actually implemented the chained declustering at the time of publication, however, so any benefit in real systems is speculation (as compared to interleaved declustering). The paper does a thorough evaluation of the Gamma project, although there is no comparison to a commercial DMBS such as Teradata, possibly because the new database is so different the authors feel comparison would not make sense.</p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page19">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page17">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>

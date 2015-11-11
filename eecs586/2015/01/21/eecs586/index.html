@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Sorting &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Sorting</h1>
+  <span class="post-date">21 Jan 2015</span>
+  <h2 id="sorting-basics">Sorting Basics</h2>
+<p>Sorting Assumptions:
+* n items
+* key (perhaps plus data)
+* key type has {=,&lt;,&gt;} operations</p>
+
+<p>Major Dichotomy:
+* Internal, or all data in RAM
+* External, or all data in ROM (IOPs dominate)</p>
+
+<p>We’ll focus on RAM and not worry about IO. The book mentions selection/insertion sort (<script type="math/tex">\Theta(n^2)</script>) and merge sort (<script type="math/tex">\Theta(n \log n)</script>). Counting sort (section 8.2) is a stable sort with <script type="math/tex">\Theta(n+k)</script> time if keys are in k. </p>
+
+<p><strong>Stable Sort</strong> - If key i and key j are the same, and <script type="math/tex">i \lt j</script>, then the final sorted order results in key i (and its data) occuring before key j (and its data).</p>
+
+<h2 id="radix-sort-83">Radix sort (8.3)</h2>
+<p>Keys are d digits base b. Sort digit by digit (stable). In many cases we’ll claim that radix is linear time (<script type="math/tex">\Theta(d(n+b))</script>) but it depends. If d and b are fixed it’s linear time. If we fix b, we want key space to be large enough so that n keys distinct. In this case we need to grow d, where <script type="math/tex"> d \gte \log_b n </script>.</p>
+
+<h2 id="bucket-sort-84">Bucket sort (8.4)</h2>
+<p>Keys are numbers in [0,1). Suppose uniform random IID keys. This assumption is big. We sort into buckets and then insertion sort through them. Worst case of this sort is <script type="math/tex">O(n^3)</script>, where all keys are in the same bucket. See handouts. </p>
+
+<p>Expected time of bucket sort?</p>
+
+<p>Book shows the proof using indicator variables. Let’s talk about a different proof. Expected bucket size is n. Time to sort bucket is constant. This isn’t always right though - the expected time of sorting the bucket isn’t equal to the sorting time of expected bucket size.</p>
+
+<p>Why do I go to this class?</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

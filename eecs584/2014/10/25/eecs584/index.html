@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Paper Review - Dynamo: Amazons Highly Available Key-value Store &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Paper Review - Dynamo: Amazons Highly Available Key-value Store</h1>
+  <span class="post-date">25 Oct 2014</span>
+  <p>Typical database packages attempt to have something for everybody, and as a result leave room for improvement in most use cases, even if that room is fairly small. For most companies, the ease of use and flexibility that a modern DMBS provides is incentive enough to offset the performance loss. However, for large companies like Google and Amazon, building an in house solution to extract the last five percent of performance is generally cheaper in the long run. Thus is the motivation behind Dynamo, a key-value store built by Amazon that trades consistency for availability and response time. </p>
+
+<p>Dynamo is on the surface quite simple - the application exposes a get and put method to the user, indexed by key. The complexity of the system, however, lies on a few factors:</p>
+
+<ol>
+  <li>Highly write available, the system prioritizes writes over reads</li>
+  <li>Eventually consistent, the system makes no promises about the state of data at a current time</li>
+  <li>Distributed and fault tolerent, the system is designed to tolerate entire datacenter outages</li>
+</ol>
+
+<p>Amazon would lose customer loyalty if their website failed to work even one percent of the time, and thus for them it’s worth spending the money on a system that will rarely ever fail. The biggest innovation to achieving this goal is the idea of the ring node in a peer to peer system. Dynamo uses a consistent partitioning algorithm to store data over a set of nodes (ideally located in separate data centers). In a sense this is a bit like Google’s GFS, but Dynamo differs by offering a peer to peer system with no master. The system also has a powerful versioning tool that can detect when versions of objects conflict over time. This allows the user to resolve these conflicts using logic they define. While this is claimed to be a strength of the system, it is also a weakness. By leaving conflict resolution mainly in the hands of the application programmer, Dynamo places heavy trust in its users. </p>
+
+<p>One strength of Dynamo is that the system remains flexible for Amazon’s internal usage. By offering tunable knobs, the system allows users to configure the database to their workload. For example, Dynamo can be used for mainly read queries by increasing the value of W and setting R to be one. There is a weakness to the system hinted at by the paper, and that is that Dynamo is not actually fully automated. Adding additional nodes requires administrator intervention, and this would become quite tedious in cases with thousands of nodes. I suspect that Amazon’s cloud offering of Dynamo shields the user from most of these issues, and that by now Amazon has improved the system to automatically add and release nodes from the database.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

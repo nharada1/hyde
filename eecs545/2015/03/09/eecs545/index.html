@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Expectation Maximization &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Expectation Maximization</h1>
+  <span class="post-date">09 Mar 2015</span>
+  <h2 id="learning-in-bayes-nets">Learning in Bayes Nets</h2>
+<p>If we know the structure, there are two methods of learning: full observation (maximum likelihood) and partial observation (EM). </p>
+
+<h2 id="maximum-likelihood-for-bayes-nets">Maximum Likelihood for Bayes Nets</h2>
+<p>Given a simple Bayes net X-&gt;Y, what are the parameters?</p>
+
+<ul>
+  <li>
+    <script type="math/tex; mode=display">P(X)</script>
+  </li>
+  <li>
+    <script type="math/tex; mode=display">P(Y \mid X)</script>
+  </li>
+</ul>
+
+<p>We can take derivatives, set them to zero, and find the maximum likelihood. In Bayesian nets, the likelihood term decomposes with respect to local conditional probability tables. If we know all of the values of each parameter, it’s very easy to find the correct values. The complexity depends on the size of the parent sets, which is good for scaling as long as parent sets aren’t massive. This is equivalent to finding weights in linear regression. </p>
+
+<p>In a Markov network, have a probability distribution and a structure. We want to take derivative with respect to the parameters. We have representation of each clique. The solution isn’t closed form, but we can use derivatives for an interative approach. </p>
+
+<h2 id="expectation-maximization">Expectation Maximization</h2>
+<p>For parameter learning when the data is not fully observed. Realistically, this is what we’re going to get. Suppose we have a set of variables X and the remaining set of variables are hidden Z. We treat Q=P(Z|X) and then we update the observations by treating Q as an observation. </p>
+
+<p>We’ll start with K-means: K-means is iterative and we try to minimize distortion measure J. The K-Means algorithm can be viewed as an EM sequence! In the E step we assign each point to its closest center. In the M step we update the centers based on distance. </p>
+
+<p>Mixture of Gaussians allows soft clustering, where K means requires that each point is in one cluster. In the GMM, each point is generated by a Gaussian, but they overlap so we don’t know for sure which point comes from where. E step is to compute the probability that point was generated by Gaussian K. The M step is that given the responsibilities of each Gaussian, we reevaluate the coefficients. Derivation of EM is available online, but suggest <a href="http://cs229.stanford.edu/notes/cs229-notes8.pdf">Stanford 229 notes</a>. </p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Paper Review - H-Store&#58 A High-Performance, Distributed Main Memory Transaction Processing System &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Paper Review - H-Store&#58 A High-Performance, Distributed Main Memory Transaction Processing System</h1>
+  <span class="post-date">25 Sep 2014</span>
+  <p>In this demo paper from 2008, the authors demonstrate H-Store, a shared nothing main memory database system. In their previous paper on OTLP and main memory databases, the authors lay the groundwork for this database and describe some of the problems of traditional DMBSes and potential new architectures to be considered. Specifically, the authors argue that extending traditional structures such as locks and buffer managers to main memory databases is detrimental, and that an entirely new architecture could be constructed to better take advantage of the capabilities inherent in an MMDB. </p>
+
+<p>In H-Store, the authors completely eliminate locking and latching by distributing the filesystem throughout multiple sites, and storing disjoint sets of data among them. Because each H-Store site is single threaded and operates on its own memory, the system is able to remove locks entirely while maintaining parallelism via multiple sites per CPU and multiple CPUs per node. This architecture also allows H-Store to easily redistribute processing load across the cluster - incoming transactions are handled at each site and then, if possible, rerouted to their proper sites.</p>
+
+<p>Another important architecture decision of H-Store was the separation of deployment and runtime. During system deployment, the database administrator must predefine transactions in the form of <em>stored procedures</em>. By precompiling transactions, H-Store is able to improve performance (by allowing direct access to memory), as well as eliminate locking (by reasoning about data layout at dispatch time). In addition, after construction, the database is optimized to the parameters at deployment and will not fare well when adding new procedures (although this is possible). This separation of deploy and runtime is a point of strength and weakness in H-Store, and allows the database to trade performance for flexibility. </p>
+
+<p>H-Store uses redundancy to operate without any disk storage at all. This presents a potential problem that goes un-addressed in this paper - what happens if power fails to a data center. The way H-Store is described here, all data will be permanently lost because there is no disk storage at all. Redundancy assumes individual sites or nodes may fail, but that in the end there will be enough of the cluster up to recover the lost data. For a production system, this would be catastrophic, and a real-world deployment of H-Store would certainly require checkpointing or snapshotting to disk. Another weakness of this system is its deploy-time capability. Not only is everything required at deploy time, but there is no automatic database layout design, which leaves work to the administrator. This is a weakness of the system, although the authors do acknowledge that the limitation exists and there is active work to remedy the problem.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

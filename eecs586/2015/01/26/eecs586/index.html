@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Sorting &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Sorting</h1>
+  <span class="post-date">26 Jan 2015</span>
+  <h2 id="master-theorem">Master Theorem</h2>
+<p>Three cases for theorem, intuition says:</p>
+
+<ul>
+  <li><script type="math/tex">a=b</script> means each layer does about as much work as the previous</li>
+  <li><script type="math/tex">a \lt b</script> means each layer does less work</li>
+  <li><script type="math/tex">a \gt b</script> means each layer does more work</li>
+</ul>
+
+<p>Review the book and notes, because there are fringe cases where we can’t actually apply the theorem.</p>
+
+<h2 id="heapsort">Heapsort</h2>
+<p>Uses a heap to maintain data, and reads from heap (which is sorted by definition) to sort. In a heap:</p>
+
+<script type="math/tex; mode=display"> A(i) \geq A(2i) </script>
+
+<script type="math/tex; mode=display"> A(i) \geq A(2i+1) </script>
+
+<p>Maximum element at the root as a result of these local properties. </p>
+
+<p>Why are all these algorithms n log n? We want a lower bound on comparison based sort (remember no assumptions about the data, just comparison.) The intuition is the binary result of sorting algorithms creates the lg bounds. Two different inital sorted orders can’t end up at the same leaf, so the number of leaves must be &gt;= number of initial input orderings. There are n! input orderings. For tree height h # of leaves <script type="math/tex">\leq 2^h</script>, we need:</p>
+
+<p><script type="math/tex">2^h \geq n!</script> and <script type="math/tex">h \geq \log n!</script></p>
+
+<script type="math/tex; mode=display"> h \geq \sum_{i=1}^n \log i </script>
+
+<p>so the lower bound is</p>
+
+<script type="math/tex; mode=display"> \Theta(n \log n) </script>
+
+<p>What about the expected case? We can convert trees to each other while retaining leaf number and depth will differ by only one. Average case is <script type="math/tex">\Theta(n \log n)</script>. </p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

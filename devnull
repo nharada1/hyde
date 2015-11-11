@@ -1,0 +1,8 @@
+Configuration file: /home/ubuntu/Development/hyde/_config.yml
+            Source: /home/ubuntu/Development/hyde
+       Destination: /home/ubuntu/Development/hyde/_site
+      Generating... 
+                    done.
+ Auto-regeneration: enabled for '/home/ubuntu/Development/hyde'
+Configuration file: /home/ubuntu/Development/hyde/_config.yml
+jekyll 2.2.0 | Error:  Address already in use - bind(2)

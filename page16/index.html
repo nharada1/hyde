@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/10/28/eecs492/">
+        Graph Planning
+      </a>
+    </h1>
+
+    <span class="post-date">28 Oct 2014</span>
+
+    <h2 id="backwards-search">Backwards Search</h2>
+<p>In backwards search we do “regression planning” where we generate predecessors starting from the goal state. We aren’t searching in isolation though, we are moving toward a target state. The problem is handling interactions between goal propositions.</p>
+
+<p>Formally - If the domain can be expressed in PDDL, we can do regression search. Given a ground goal description g, ground action a:</p>
+
+<script type="math/tex; mode=display"> g' = (g - ADD(a)) \cup PRECOND(a) </script>
+
+<h2 id="heuristics-for-planning">Heuristics for Planning</h2>
+<p>We want to develop admissible heuristics for planning, and then we can use A<script type="math/tex">^\ast</script>. We’ll:</p>
+
+<ol>
+  <li>Treat the search as a graph</li>
+  <li>Nodes are states</li>
+  <li>Edges are actions</li>
+</ol>
+
+<p>Planning graphs only work with propositional logic. The planning graph is state followed by action followed by state etc. Thus the graph is organized into layers, S0, A0, S1, A1, etc. Note that we need to describe mutually exclusive actions/states.  </p>
+
+<p>Details:</p>
+
+<ol>
+  <li>Planning graphs are NOT search, they are a heuristic. As a result, you <strong>cannot definitively answer whether a state is reachable</strong>.</li>
+  <li>We CAN estimate how many steps to S</li>
+</ol>
+
+<p>When we progress through the planning graph, we’ll alternate between <script type="math/tex">S_i</script> and <script type="math/tex">A_i</script> until two consecutive levels are indentical. As we progress, mutex links monotonically decrease. </p>
+
+<h2 id="mutexes">Mutexes</h2>
+<p>There are several mutex types:</p>
+
+<ol>
+  <li>Inconsistent Effects - One action negates the other</li>
+  <li>Interferences - Sequential constraint</li>
+  <li>Competing Needs - One precondition of an action is mutually exclusive with the precondition of another</li>
+  <li>Inconsistent Support - Two literals at the same level that are a negation of each other</li>
+</ol>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/27/eecs584/">
+        Paper Review - Authoritative Sources in a Hyperlinked Environment
+      </a>
+    </h1>
+
+    <span class="post-date">27 Oct 2014</span>
+
+    <p>In the late 90s, the World Wide Web was quickly becoming a global internet, and research in characterizing the network’s structure was coming to a head. While Google is generally credited for the creation of authority based search algorithm, on the other coast Professor Jon Kleinberg was developing an algorithm that formed the basis for Google and provided complex algorithmic representation of webpages. This paper outlines Kleinberg’s “HITS” algorithm (which is actually never called HITS in the publication), which represents pages by both authority as well as a “hub score” which estimates how value that page is to others.</p>
+
+<p>The issue of searching the web was the primary motivation of this paper, like many others at the time. This paper, unlike the PageRank paper, develops in depth mathematical description of its algorithm. The author represents the internet as a directed graph, and runs an iterated algorithm to develop its two scores. First, it tries to determine authority by inspecting how many hubs point to it. Second, it updates its hub score to be the sum of the authority scores it points to. The authors provide mathematical proof (based on eigenvector analysis) that the algorithm indeed converges. This is a contrast to the Google PageRank paper, which does not provide much mathematical rigor. </p>
+
+<p>One major weakness of this technique is that the rankings themselves are dependent on the search terms, meaning that a new ranking must be computed for each query that is given to the system. This makes the HITS algorithm weak for a search engine as the processing power required would be immense for large loads, especially back in the time period it was developed. It does, however, only use “relevant” documents which is good for increasing computation speed and is a strength as it doesn’t require the entire database to compute. One could potentially see this being useful for a highly distributed algorithm - by partitioning data into disjoint subsets we would ideally be able to run many queries in parallel.</p>
+
+<p>I think the most interesting part of this paper isn’t the algorithm itself, but the historical perspective one can view it with. This algorithm, besides the obvious issue of being a per-query algorithm, is basically what Google ended up creating. Not to disparage Google’s accomplishments, but most of the ideas here were used and tweaked by Google. This paper shows that history really is written by the winner, as it’s conceivable that had Dr Kleinberg been an entrepreneur that Google would never have gained traction. In some ways the algorithm is superior - for example it computes both hub and authority rankings which would help in ranking and search. The paper especially is far superior, offering proofs of convergence as well as a comprehensive discussion of use cases and modifications possible. Fortunately for Google, however, this paper was never commercialized and PageRank ended up gaining fame as the “first” authority based search algorithm.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/26/eecs584/">
+        Paper Review - The PageRank Citation Ranking: Bringing Order to the Web
+      </a>
+    </h1>
+
+    <span class="post-date">26 Oct 2014</span>
+
+    <p>In the early days of the web, search engines simply indexed pages by how much of your text matched the page. Results were inconsistent, and website designers could fool the systems by simply placing a bunch of hidden text somewhere on the page. In addition, results were never listed by what the user was truly looking for - searching a common word could bring results from any number of random webpages. The PageRank algorithm attempts to provide a ranking algorithm based on authority instead of frequency. The intuition is that important web pages are likely linked to by (a) lots of webpages and (b) other important webpages. This realization is the underlying of Google’s first search algorithm, and spawned the multinational monopoly that exists today.</p>
+
+<p>The PageRank algorithm uses the underlying structure of hyperlinks to determine page rank instead of page content. The more pages that link to your page, the higher your rank will be. Additionally, the authors chose to model the system as a random internet surfer, and introduced a damping factor (matrix E) to make the algorithm more resilient to infinite loops and cyclic graphs. While many details of the algorithm are excluded, the final form lends itself to matrix operations, and thus is computable in a reasonable amount of time. Even at the time of this papers release (1998), the algorithm could index millions of pages effectively. The authors provide some implementation details such as how to allocate memory for each page and how to remove dangling links to reduce memory consumption.</p>
+
+<p>This paper is very strong in explaining its major points - the authors offer lots of simple explanations for how their system works, while also including some mathematical background. It’s worth noting, however, that the final implementation of the algorithm ends up being full of warts - the non-conformity of the web (especially in an era before stronger compliance and open source parsers) means that the authors have to introduce ugly heuristics to create a working system. For example, the authors exclude everything from a cgi-bin folder, which is a sloppy way of excluding dynamic pages. One thing I really like about this paper is the discussion of the personalized E matrix, and how personalized search can be created very easily. I tend to think of personalized results as a recent development, but even during the genesis of Google the authors had created a model for it. From a historical perspective this paper is interesting and I think it’s good to read as a history lesson in the field. At the time, it introduced a novel concept of page ranking, and has become so influential that most people who were unaware of early search are surprised that the systems in place were ever <strong>not</strong> authority based.</p>
+
+<p>I would say this paper is fairly weak in its actual mathematical background, and reads like a paper written by engineers and not scientists (which isn’t a bad thing). While it’s quite readable, the paper provides few theoretical guarantees or proofs, simply giving us a few equations. Part of this is the simplicity of the algorithm, but I would have liked to see a discussion provide more mathematical background. Even the wikipedia article for PageRank handles the math at a higher level than this paper.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/10/25/eecs584/">
+        Paper Review - Dynamo: Amazons Highly Available Key-value Store
+      </a>
+    </h1>
+
+    <span class="post-date">25 Oct 2014</span>
+
+    <p>Typical database packages attempt to have something for everybody, and as a result leave room for improvement in most use cases, even if that room is fairly small. For most companies, the ease of use and flexibility that a modern DMBS provides is incentive enough to offset the performance loss. However, for large companies like Google and Amazon, building an in house solution to extract the last five percent of performance is generally cheaper in the long run. Thus is the motivation behind Dynamo, a key-value store built by Amazon that trades consistency for availability and response time. </p>
+
+<p>Dynamo is on the surface quite simple - the application exposes a get and put method to the user, indexed by key. The complexity of the system, however, lies on a few factors:</p>
+
+<ol>
+  <li>Highly write available, the system prioritizes writes over reads</li>
+  <li>Eventually consistent, the system makes no promises about the state of data at a current time</li>
+  <li>Distributed and fault tolerent, the system is designed to tolerate entire datacenter outages</li>
+</ol>
+
+<p>Amazon would lose customer loyalty if their website failed to work even one percent of the time, and thus for them it’s worth spending the money on a system that will rarely ever fail. The biggest innovation to achieving this goal is the idea of the ring node in a peer to peer system. Dynamo uses a consistent partitioning algorithm to store data over a set of nodes (ideally located in separate data centers). In a sense this is a bit like Google’s GFS, but Dynamo differs by offering a peer to peer system with no master. The system also has a powerful versioning tool that can detect when versions of objects conflict over time. This allows the user to resolve these conflicts using logic they define. While this is claimed to be a strength of the system, it is also a weakness. By leaving conflict resolution mainly in the hands of the application programmer, Dynamo places heavy trust in its users. </p>
+
+<p>One strength of Dynamo is that the system remains flexible for Amazon’s internal usage. By offering tunable knobs, the system allows users to configure the database to their workload. For example, Dynamo can be used for mainly read queries by increasing the value of W and setting R to be one. There is a weakness to the system hinted at by the paper, and that is that Dynamo is not actually fully automated. Adding additional nodes requires administrator intervention, and this would become quite tedious in cases with thousands of nodes. I suspect that Amazon’s cloud offering of Dynamo shields the user from most of these issues, and that by now Amazon has improved the system to automatically add and release nodes from the database.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/10/21/eecs492/">
+        Planning Day 2
+      </a>
+    </h1>
+
+    <span class="post-date">21 Oct 2014</span>
+
+    <p>Methods we’ve discussed have some limitations, such as domain-specific heuristics. Planning represents an alternative that tends to use graph heuristics. Logic, for example, is not stateful and cannot handle temporal assumptions or changes in structure. Logic assumes everything happens at the same time, planning does not.</p>
+
+<p>An action divides time into a “before” and “after”. We’ll use a language called PDDL to express action schema. Note that PDDL is a highly restricted subset of first order logic.</p>
+
+<p>State is represented by a set of fluents, and those fluents must be <em>ground</em> and <em>functionless</em>. The action schema defines preconditions and the effects of a given action. This allows us to represent state.</p>
+
+<p>Action(Fly(p, from, to))
+    Precond: <script type="math/tex">At(p, from) \wedge Plane(p) \wedge Airport(from) \wedge Airport(to)</script>
+    Effect: <script type="math/tex"> \neg At(p, from) \wedge At(p, to) </script></p>
+
+<h3 id="forward-search">Forward Search</h3>
+
+<p>In this case, forward search is called progression planning. Basically we just move through the search space, with each constraint and action happening at any state change step. We can use any graph search algorithm for this, and any complete graph search algorithm will be complete for forward planning. Obviously this is quite inefficient, as there are many irrelevant actions. We need either: good heuristics OR backward search.</p>
+
+<h3 id="backward-search">Backward Search</h3>
+
+<p>This is what people actually use. Also called <strong>regression</strong> planning, it generates predecessors starting from the goal state. We are regressing through potential goals trying to not invalidate any states.</p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page17">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page15">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/24/eecs584/">
+        Paper Review - Efficient Query Evaluation on Probabilistic Databases
+      </a>
+    </h1>
+
+    <span class="post-date">24 Nov 2014</span>
+
+    <p>Databases, especially for OLAP and business intelligence workloads, are well established but not very flexible for users. They rely on rigid schema and precise queries to retrieve results. On the other hand, information retrieval services such as Google are good at retrieving relevant information, but lack the structure of a database. For example, Google can correct spelling errors, allow for inaccurate queries, and can generally intuit what the user is asking for. This paper seeks to unify those opposing ideas by creating a probabilistic database that can rank the results in order of most relevant instead. This new paradigm would allow a user to query a database by asking less precisely what they want - for example a user could ask for “all good mystery novels from the 1990s” and receive a ranking of the results. By enabling these queries, an analyst could more easily analyze data from a large OLAP database, freed from the usual constraints of formulating just the perfect query to get the results he or she wants.</p>
+
+<p>The database described in this paper uses the idea of “possible worlds semantics”, which represents each possible database state along with its probabilities. The database assigns a probability to each tuple and uses these values to compute the probability of the tuples in the answer. Unfortunately, the probabilities computed in the naive way are wrong - the events are conditional on each other in unknown ways. Thus, the databases rewrites the query plan, searching until it finds one that is correct. This process is extremely powerful because it works on any SQL query with approximate predicates, and includes joins, nested sub-queries, aggregates, etc. The paper is quite mathematically rigorous, and provides a relational algebra for approximate operators, as well as formal proofs and theorems for much of the author’s work. One strength within this work is the section of query optimization, which provides transformation rules for this probabilistic algebra within a database. As a foundation for future projects, this work would appear quite influential.</p>
+
+<p>The paper also includes methods for dealing with the corner cases where a query has Sharp-P-complete complexity and cannot be solved in polynomial time. In these cases, the paper introduces probabilistic workarounds in the form of either error minimizing heuristic or Monte-Carlo simulation. The paper also (poorly) describes the prototype database that the authors implemented. The proposed database operates as a middleware to the RDBMS (in this case Microsoft SQL Server) and reformulates probabilistic queries into “extensional” SQL queries. This section seems to be a weakness of the paper, as both the experimental setup and results are fairly lacking compared to the rest of the journal article. Additionally, if we look at the results of runtime, the jump in time required to utilize this database is high - in some cases 1000 fold from safe plan to bare query. I would be interested to see a proper commercial implementation of this database to compare this paradigm to traditional RDBMS and information retrieval solutions. Obviously this is far outside the scope of the paper.</p>
+
+<p>One interesting idea would be extending the probabilistic database to fit other database designs. For example, supporting an object-relational model such as Postgres. Doing so would be enable approximate queries on a larger variety of data, such as geospatial or coordinate information.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/11/18/eecs492/">
+        Decision Analysis
+      </a>
+    </h1>
+
+    <span class="post-date">18 Nov 2014</span>
+
+    <h2 id="some-more-stats">Some more Stats</h2>
+<p>Covariance relates variance of multiple random variables. Remember that all the information of a Gaussian is contained in its exponential term. Covariance is a positive definite symmetric matrix.</p>
+
+<p><strong>Central Limit Theorem</strong> - The distribution of sum of N independent and identically distributed random variables approaches a normal distribution.</p>
+
+<h2 id="decision-analysis">Decision Analysis</h2>
+<p>Rational agents maximize utility - utility captures preferences. We need to formalize utility:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>P(Result=s’</td>
+      <td>a,e) is the probability of an outcome s’ given evidence e.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We also want to define a utility function U(s) that captures the agent’s preferences (this is a single number). Additionally we want the expected utility of an action, which we can define as:</p>
+
+<script type="math/tex; mode=display"> EU(a \mid e) = \sum P(Result(a) = s' \mid a,\textbf{e})U(s') </script>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/17/eecs584/">
+        Paper Review - CryptDB: Processing Queries on an Encrypted Database
+      </a>
+    </h1>
+
+    <span class="post-date">17 Nov 2014</span>
+
+    <p>Privacy is an ever-increasing concern, especially in today’s always connected and cloud based world. Companies have databases with terabytes of consumer data, many of which are exploitable and unsafe. Even in cases where exploitation is not easy, there are always additional zero-day vulnerabilities (such as Heartbleed and Shell Shock) that present security threats and challenges. Thus, an encrypted database is a powerful guarantee that a user’s data will remain secure, even in the event of internal compromise. This paper introduces CryptDB, a database proxy layer and extension that secures existing databases. The ideas presented are designed to work over any commercial database, although the authors use MySQL.</p>
+
+<p>CryptDB’s primary contribution is the idea of multiple security layers to process queries and expose only as much information is required to get a result to the DBMS. Thus, the DBMS actually has no idea what data it is storing, relying on a secured proxy to handle interactions with the user. The authors use a large variety of existing security ciphers, providing completely random encryption, order-preserving encryption, homomorphic (function preserving), word search, and join encryption. Of special note, the OPE exposes some data to the client (up to half in the worst case). The homomorphic encryption is only additively homomorphic (fully homomorphic encryption is still in its infancy). The join encryption is specially designed for CryptDB and introduces a primitive called JOIN-ADJ (adjustable join) to support joining columns unknown apriori by the proxy. The proxy operates on a per-user basis and provides a separate session for each user so that a compromised key cannot expose the entire database. This design a strong because it also prevents a malicious user from exposing the database in a cloud system where users are not fully trusted. CryptDB is built atop mysql-proxy, and includes some UDFs to the underlying MySQL implementation.</p>
+
+<p>This raises the first point of vulnerability and weakness with the system - if the underlying operating system is the vulnerable system, the proxy is most likely going to be affected as well. The second weakness is that simply using the system will resolve more and more of the underlying information to the DBMS (as additional security layers are required) and will eventually expose almost all of the data eventually. This is because the order-preserving encryption leaks up to half of the data bits in the worst case. Thus, a workload could in theory expose the entire database with enough queries. The authors claim to be working on this problem and if they can fix it this will be a big improvement. Still though, eventually the lowest level of encryption will be used on all the data with enough workload.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/16/eecs584/">
+        Paper Review - l-Diversity: Privacy Beyond k-Anonymity
+      </a>
+    </h1>
+
+    <span class="post-date">16 Nov 2014</span>
+
+    <p>As both industry and the sciences begin to leverage the vast amounts of data at their disposal, privacy becomes more important. As more data is published, it becomes more and more vital to anonymitize data that is released for study. The idea of k-Anonymity addressed this problem. K-Anonymity makes guarantees that each record is indistinguishable from at least k-1 other records with respect to certain attributes. The idea of k-anonymity is simple - for any item there must be k items that have the same field. While easy, this scheme presents problems.</p>
+
+<p>The authors explain these problems and introduce their own notion of anonymity called l-diversity. The first problem occurs when certain attributes are too homogeneous. In this case, it may be possible to infer data simply based on elimination - if we know all but one attribute and that attribute is not diverse, then we can simply infer the result. The second problem occurs when an attacker has external knowledge of the system. For example, if two attributes only occur together then we can make assumptions about identity even in k-anonymous tables. The paper doesn’t state, but implies, that this external knowledge need not be domain knowledge - with sufficient computational resources an attacker could use pattern recognition techniques to find data that occurs together.</p>
+
+<p>The key insight between l-diversity is that (1) the attributes cannot be too homogeneous or distinct and (2) the attributes cannot be inferred by l-1 pieces of damaging background knowledge. The authors do a good job of quantifying and formalizing these intuitions. The paper uses Bayes-Optimal to model background knowledge as a probability distribution. A table is l-diverse if there are at least l well-represented values for a sensitive attribute. The paper further defines several ways to formalize “well-diverse”. Entropy based diversity draws from information theory (remember that entropy is the “number of bits” required to represent a piece of data) to characterize diversity of an attribute. The authors also introduce a less-strict version they call recursive diversity. The paper finally offers algorithms and performance evaluation of l-diversity.</p>
+
+<p>While l-diversity is a powerful formalization of anonymization, the paper does have some weaknesses. It seems as though it would be difficult to calculate an l-diverse table for many sensitive fields because of how many constraints are present in the scheme, especially for entropy-based diversity. I do like that this paper provides such strong theoretical guarantees, and I find that a major strength of this paper. Still, I could see it being difficult to convince the general public to use this method because it is much more difficult to grasp than k-anonymity. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/15/eecs584/">
+        Paper Review - RemusDB: Transparent High Availability for Database Systems
+      </a>
+    </h1>
+
+    <span class="post-date">15 Nov 2014</span>
+
+    <p>Highly available database systems are becoming more important and companies and services trade-off consistancy for availability. This paper presents RemusDB, a software layer designed to introduce high availability in commodity database systems. It does this via virtual machine, placing the host database on a VM and replicating the VM to provide failover. This design allows any database to be used as the underlying system, freeing database designers from the complexities of high availiability. </p>
+
+<p>The Remus system is an established failover system for virtual machines that run on the Xen hypervisor. Remus checkpoints the VM at various times, capturing the complete state of the device. On the event of a failure, the client is forwarded to the new system, which has an exact (or near exact) copy of the old VM. Thus, the client sees no interruption of service and continues on like nothing happened. While a powerful tool, Remus presents problems when running a database system. Specifically, large amounts of memory must be maintained. Additionally, RemusDB reduces latency added to the client-server communication path by the failover mechanisms. The primary insight of this paper is the idea of compressing checkpoints to transfer less data during replication. Because databases generally maximize memory usage to provide faster performance via caching, this idea is important for database workloads. RemusDB also selectively ignores certain parts of memory that can be reconstructed by the backup machine, again reducing memory transfer. In theory this would make the failover slower, but the authors don’t mention this at all.</p>
+
+<p>The paper also changes the underlying network code to work around Remus’ network buffering. Remus holds packets until a checkpoint is completed, potentially disrupting database service. While required for RemusDB to work, this part of the paper seems to me by far the weakest. The authors actually change the underlying database as well as the linux kernel itself to allow the DBMS to selectivly decide which packets can be buffered until the next checkpoint. While I understand the motivation behind this, it to me seems to defeat the entire purpose of RemusDB, which is to lie atop the hypervisor to provide availability. The authors claim that any DBMS should work with the system, but with this modification we will require a new “RemusDB approved” version of the DBMS to actually implement any of the systems. </p>
+
+<p>One final thing to note is that consistancy is still mostly achieved even though we have a highly available system. RemusDB is 2-safe, meaning that updates will not be lost in the event of a failover. This is possible because transaction commits are not acknowledged until both systems have recorded the update. One interesting discussion would be how this impacts the CAP theorem, as we must trade availability for consistency in some form.  </p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page14">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page12">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>

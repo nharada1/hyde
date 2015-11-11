@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/14/eecs584/">
+        Paper Review - Relational Cloud: A Database-as-a-Service for the Cloud
+      </a>
+    </h1>
+
+    <span class="post-date">14 Nov 2014</span>
+
+    <p>As more webservices are moved to the cloud, companies find themselves considering databases as a cloud service. In theory it makes sense - much of the cost of a database is on startup and administration. License fees and competent database administrators are expensive, but generally don’t scale as the database does. Although on paper DBaaS makes sense, there are problems for both the database owners and the users. Database performance can be expensive in this model, requiring more money from the cloud provider. Additionally, companies don’t trust random companies with their sensitive data. This paper introduces the Relational Cloud, a database designed as a service that attempts to alleviate some of these concerns. Note that at the time of this writing the DBaaS was just gaining traction, with Amazon and Microsoft’s offerings just taking off the ground. At the time of this review, there are many competing DBaaS providers, including multiple paradigms and types of databases.</p>
+
+<p>Relational cloud presents a few novel ideas. The first is that the database attempts to partition databases by machine, in order to better group tenants that can coexist on a machine. The second, related to this, is the use of a graph-based data partitioning algorithm to scale out complex workloads. The final contribution is an encryption layer that can operate on encrypted data and secure the user’s information. This last contribution is an extremely powerful idea, and is later extended into a whole separate series of papers (CryptDB). I think the strongest contribution of this paper is in CryptDB, as privacy concerns are more and more relevant not only for corporations but also individuals. I believe that in the future we will see privacy in cloud services becoming a strong selling point, and the ability to operate on encrypted data is quite powerful.</p>
+
+<p>To partition data, Relational Cloud uses a strategy based on workload. By looking at previous workloads, the analyzer attempts to partition the database in a way that minimizes the number of distributed transaction. This allows better performance, and because the operation is done at the database level we can avoid expensive virtual machines to contain the databases. Relational cloud uses an engine called Kairos to allocate resources across physical machines. Kairos uses non-linear optimization to minimize the number of machines required to support a workload, as well as balance load across machines. I think this paper should have included more information about Kairos, but the authors instead decided to publish a separate paper. For encrypted data transactions, the database supports several levels of encryption. The authors call this “adjustable security”, meaning that they can choose how secure a tuple is based on what is required. Weaker encryption guarantees are made for tuples that must support operations, such as sorting and inequality checks. Each row is encrypted into an “onion”, meaning that each value in the table is wrapped in layers of increasing encryption. </p>
+
+<p>For me, the biggest weakness of this paper is the number of offshoots it requires for understanding. The paper contains two powerful concepts, but offloads each of them into a separate paper. While the motivations behind this may be reasonable (each is a large subject), it makes it much harder to understand the system. I also would have liked a few more results, for example the performance of encryption on non-OTLP loads. I assume this analysis is contained within the other offshoot papers.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/11/13/eecs492/">
+        Continuous Probability
+      </a>
+    </h1>
+
+    <span class="post-date">13 Nov 2014</span>
+
+    <h2 id="more-bayesian-networks">More Bayesian Networks</h2>
+<p>Important types of networks:</p>
+
+<h4 id="singly-connected-network">Singly Connected Network</h4>
+<p>At most one undirected path between any node pair. Space and time complexity is linear in size of network.</p>
+
+<h4 id="multiply-connected-network">Multiply Connected Network</h4>
+<p>Multiple undirected paths between nodes. Space and time complexity is exponential in size. If we identify a set of variables that will render a network singly connected we can split apart the network to create a singly connected network. We could also transform a network into a “polytree” where we join individual nodes to form cluster nodes. </p>
+
+<h2 id="approximate-inference">Approximate Inference</h2>
+<p>Many times the network grows out of control, so we have to estimate. Our goal is to generate samples from a known distribution. <strong>Direct sampling</strong> is the easiest way to do this. We just sample many times and eventually get a close approximation to our real network. If our distribution is hard to sample, we can use <strong>rejection sampling</strong> to compute conditional probability. This method rejects samples that don’t match the evidence. Instead of calculating the full joint probability, we only calculate the probability for specific relations. In rejection sampling, as your conditionals become more rare, accuracy rapidly falls. </p>
+
+<p>Is there a better way? Yes, we can use <strong>liklihood weighting</strong>. In this method, we only want to generate samples consistent with the evidence. We’ll fix the values for evidence and sample only non-evidence variables. </p>
+
+<h2 id="continuous-probability-distributions">Continuous Probability Distributions</h2>
+<p>Basics of continuous probability here: integrating under curve is 1, probability at exactly one point is zero, etc etc. In continuous probability, we use <strong>expectation</strong> to discuss a variable’s value. </p>
+
+<script type="math/tex; mode=display"> E[x] = \int_{- \infty}^{\infty} xP(x) dx </script>
+
+<p>Expected value is average, but average only thinks of uniform distribution. Basic properties:</p>
+
+<ol>
+  <li>
+    <script type="math/tex; mode=display"> E[\alpha] = \alpha </script>
+  </li>
+  <li>
+    <script type="math/tex; mode=display"> E[\alpha x] = \alpha E[x] </script>
+  </li>
+  <li>
+    <script type="math/tex; mode=display"> E[\alpha + x] = \alpha + E[x] </script>
+  </li>
+  <li>
+    <script type="math/tex; mode=display"> E[x+y] = E[x] + E[y] </script>
+  </li>
+</ol>
+
+<p>Expected value is a linear operator which is just peachy. However, expected values are not unique, we want a measure of how spread the data is:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+ \begin{align*}
+\sigma^2 &= E[(x-E[x])^2] \\
+         &= E[x^2] - 2x(E[x]) + (E[x])^2 \\
+         &= E[x^2] - (E[x])^2
+   \end{align*}
+ %]]></script>
+
+<p>Also introducing a Guassian distribution. These are nice because we know the values based on variance and mean. It’s also its own conjugate prior (it’s the exponential distribution of the statistics world). Of course we can have multiple dimensions of random variables, which we can talk about via correlation. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs492/2014/11/11/eecs492/">
+        Bayesian Inference
+      </a>
+    </h1>
+
+    <span class="post-date">11 Nov 2014</span>
+
+    <h2 id="types-of-graph-structures">Types of Graph Structures</h2>
+<p>Last time we talked about tail to tail models. This time we discuss “head to tail” relationships. In head to tail we see a-&gt;c-&gt;b. We can use this knowledge to show conditional independence:</p>
+
+<script type="math/tex; mode=display"> P(a,b \mid c) = \frac{P(a,b,c)}{P(c)} = p(b \mid c)p(a \mid c) </script>
+
+<p>Which shows conditional independence between a and b.</p>
+
+<h2 id="inference-by-enumeration">Inference by enumeration</h2>
+
+<script type="math/tex; mode=display"> P(X \mid e) = \alpha P(X,e) = \alpha \sum\limits_y P(X,e,y) </script>
+
+<p>Where <script type="math/tex">\alpha = \frac{1}{P(e)}</script>. We sum over the hidden variables so introduce them into our equation.</p>
+
+<p>Computationally this enumeration is hard because we must sum over so many variables. </p>
+
+<h2 id="variable-elimination">Variable Elimination</h2>
+<p>Given a bunch of components we want to evaluate from the right to left side so we don’t waste calculation. This is online.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/10/eecs584/">
+        Paper Review - Get Another Label? Improving Data Quality and Data Mining Using Multiple, Noisy Labelers
+      </a>
+    </h1>
+
+    <span class="post-date">10 Nov 2014</span>
+
+    <p>While crowdsourcing is a powerful tool for researchers who need a human intelligence for their data, it can be quite expensive to hire individuals for a large data set. This paper explores the cost model of data labeling, and looks at the most effective way to partition funding when accuracy is required. In cases of unlabeled or partially labeled data, gaining a few key labels is quite important. However, because of the cost of those labels, most systems attempt to label only the most important points. This compounds problems when a label coming in is wrong - falsely labeling support vectors in an SVM will reduce accuracy dramatically.</p>
+
+<p>The paper first looks at the idea of repeated labeling. By asking many people to label one data point and taking a vote, most inaccuracy can be removed from the new points. The paper asserts that the probability of a label appearing in the system changes how well the system responds to hand labeled data. In cases where the label is more uncertain, labeling data multiple times improves accuracy dramatically. The paper also discusses the idea of preserving uncertainty in labeling via majority vote. Because some classifiers can use the information about label uncertainty in their decision or training functions, by saving the results of the vote we can increase accuracy (ie a label where all voters agree is a more powerful label than one where one side wins by a few votes). </p>
+
+<p>I like the paper’s discussion of selective repeated-labeling. The intuition is that while repeated labeling can improve accuracy, if we can allocated our total label requests towards less confident samples, we can improve quality without requiring more human requests. That is, we will take some of the repeated labels away from points we’re certain about, and move them towards points we aren’t. The paper presents a method of estimating label uncertainty that avoids natural purity measures such as entropy. The paper concludes with a fairly comprehensive results section where the authors use mostly synthetic data to test their hypothesis. I wish the authors had used real data instead of introducing noise to existing data benchmarks, as the practically of the system is hard to assess under those conditions.</p>
+
+<p>One weakness of the paper was the assumption of a homogenous environment. Although the authors do relax some assumptions throughout the paper, they fail to account for the possibilities of a real world crowd. The authors mention the failings, specifically that a higher reward may correspond to a better label (so paying more might be a better option than simply repeating many times) and that label difficulty is not static. This paper does provide a strong framework for further exploration into crowd-based reinforcement learning. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/11/09/eecs584/">
+        Paper Review - CrowdDb: Answering Queries with Crowdsourcing
+      </a>
+    </h1>
+
+    <span class="post-date">09 Nov 2014</span>
+
+    <p>While strides in machine learning have vastly improved the ability of machines to emulate human cognition, there are still many tasks which humans excel or where building the appropriate system would be far too costly. With the connectivity of the internet, new models for using human intelligence have become popular, now called “crowdsourcing”. Crowdsourcing refers to breaking a task into many smaller subproblems, each of which are easily solvable by a human but not a machine. For example, recognizing the object in a photo or the numbers on a house are both easy for humans and generally hard for machines. Amazon’s Mechanical Turk has become a popular platform for researchers and companies who require human intelligence in otherwise automated systems. CrowdDB attempts to provide a database abstraction over mechanical turk to allow otherwise difficult tasks to be automated without a programmer to create the tasks in question.</p>
+
+<p>CrowdDB introduces an extension to SQL (thankfully not named CrowdQL) which is designed to allow programmers to specify which tasks in the database should be allocated to humans. The paper introduces several tasks that are dispatchable to Amazon, specifically comparison, ordering, and field completion. I think that this is a smart and interesting way to provide interaction with the crowd, as the language separates the crowd sourcing from the database itself. In theory any other crowdsourcing method could be used, including one that is done mainly by machine. The paper also introduces a generic user interface building utility that can automatically generate user interfaces for the crowd based on schema from queries. The authors herald their UI builder as a major contribution, but I think that this is less significant than the other parts of the paper. Automatic UI development has been done before and the user interface itself provides nothing new. The interfaces built are simply form versions of the queries presented. </p>
+
+<p>This paper shows major weakness by not properly taking accuracy of the crowd into account. The crowd can be made up of people who deliberately want to undermine the task at hand, and the database takes crowd responses at face value. While the authors do address this as a weakness, I think that for any real production system this needs to be addressed, likely in a whole other paper. It was interesting to see the human variability on trust that must be accounted for. The workers can choose who to work for, and undermining their trust will result in poorer results. The need to respond to this automatically would be fantastic.</p>
+
+<p>While I like the idea of a crowd sourced database, it seems to me that the idea of crowdsourcing has been shoehorned into SQL more than it probably needs to be. I can appreciate the requirement for an abstraction of dispatching tasks to humans, but it almost seems as if SQL is a bad choice of first class citizen for the task. The rigid schema of databases clashes with the vast flexibility of the crowd, and I feel it would be better to see a more general model of crowd dispatch that would then be accessed via SQL, in addition to any other languages that could allow more expression.</p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page15">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page13">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Biostatistics &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Biostatistics</h1>
+  <span class="post-date">16 Oct 2014</span>
+  <p>How do we model expected outcomes? We can predict either binary or continuously.</p>
+
+<h2 id="binary-methods">Binary Methods</h2>
+<p>A - True Positive
+B - False Negative
+C - False Negative
+D - True Negative</p>
+
+<h4 id="accuracy">Accuracy</h4>
+<p>Proportion of cases predicted correctly. Rarely used in real systems.
+<script type="math/tex"> \frac{A+D}{A+B+C+D} </script></p>
+
+<h4 id="recall">Recall</h4>
+<p>Sensitivity, or how well we predict true positives compared to false negatives
+<script type="math/tex"> \frac{A}{A+B} </script></p>
+
+<h4 id="specificity">Specificity</h4>
+<p>How well we distingish between negatives and false positives
+<script type="math/tex"> \frac{D}{C+D} </script></p>
+
+<h4 id="precision">Precision</h4>
+<p>Positive predictive value
+<script type="math/tex"> \frac{A}{A+C} </script></p>
+
+<h4 id="negative-predictive-power">Negative predictive power</h4>
+<p><script type="math/tex"> \frac{D}{D+B} </script></p>
+
+<h4 id="relative-risk">Relative Risk</h4>
+<p>How likely an outcome is relative to the alternative
+<script type="math/tex"> \frac{A/(A+C)}{B/(B+D)} </script></p>
+
+<h4 id="odds-ratio">Odds ratio</h4>
+<p>Odds of actual predictions, does not change based on positive or negative outcomes
+<script type="math/tex"> \frac{A/C}{B/D} </script></p>
+
+<h2 id="continuous-methods">Continuous Methods</h2>
+<p>Gives a somewhat better model</p>
+
+<h4 id="auc---operating-curve">AUC - Operating Curve</h4>
+<p>Lets us see the values at different decision thresholds, generally widely used.</p>
+
+<h4 id="hosmer-lemeshow-test">Hosmer-Lemeshow Test</h4>
+<p>Check to see if observed outcomes and predicted outcomes match, but can be fooled by larger samples.
+<script type="math/tex"> \sum\limits_{i=1}^n \frac{(O_i - E_i)^2}{E_i(1-E_i/n_i)} </script></p>
+
+<h2 id="comparing-two-systems">Comparing Two Systems</h2>
+<p>How can we compare two systems to each other? Well we could just use the metrics we’ve already discussed. We have other systems though:</p>
+
+<h4 id="net-reclassification-improvement-nri">Net Reclassification Improvement (NRI)</h4>
+<p>Focuses on binary predictors, and looks at how system B treats observations differently. This gives us a sense of how many patients will be affected by improvements.</p>
+
+<h4 id="integrated-discrimination-improvement-idi">Integrated Discrimination Improvement (IDI)</h4>
+<p>Compares differences in discrimination slopes, aka differences of mean of probabilities for outcome vs non-outcome.</p>
+
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

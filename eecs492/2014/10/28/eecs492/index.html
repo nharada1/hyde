@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Graph Planning &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Graph Planning</h1>
+  <span class="post-date">28 Oct 2014</span>
+  <h2 id="backwards-search">Backwards Search</h2>
+<p>In backwards search we do “regression planning” where we generate predecessors starting from the goal state. We aren’t searching in isolation though, we are moving toward a target state. The problem is handling interactions between goal propositions.</p>
+
+<p>Formally - If the domain can be expressed in PDDL, we can do regression search. Given a ground goal description g, ground action a:</p>
+
+<script type="math/tex; mode=display"> g' = (g - ADD(a)) \cup PRECOND(a) </script>
+
+<h2 id="heuristics-for-planning">Heuristics for Planning</h2>
+<p>We want to develop admissible heuristics for planning, and then we can use A<script type="math/tex">^\ast</script>. We’ll:</p>
+
+<ol>
+  <li>Treat the search as a graph</li>
+  <li>Nodes are states</li>
+  <li>Edges are actions</li>
+</ol>
+
+<p>Planning graphs only work with propositional logic. The planning graph is state followed by action followed by state etc. Thus the graph is organized into layers, S0, A0, S1, A1, etc. Note that we need to describe mutually exclusive actions/states.  </p>
+
+<p>Details:</p>
+
+<ol>
+  <li>Planning graphs are NOT search, they are a heuristic. As a result, you <strong>cannot definitively answer whether a state is reachable</strong>.</li>
+  <li>We CAN estimate how many steps to S</li>
+</ol>
+
+<p>When we progress through the planning graph, we’ll alternate between <script type="math/tex">S_i</script> and <script type="math/tex">A_i</script> until two consecutive levels are indentical. As we progress, mutex links monotonically decrease. </p>
+
+<h2 id="mutexes">Mutexes</h2>
+<p>There are several mutex types:</p>
+
+<ol>
+  <li>Inconsistent Effects - One action negates the other</li>
+  <li>Interferences - Sequential constraint</li>
+  <li>Competing Needs - One precondition of an action is mutually exclusive with the precondition of another</li>
+  <li>Inconsistent Support - Two literals at the same level that are a negation of each other</li>
+</ol>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

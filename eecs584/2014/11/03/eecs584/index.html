@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Paper Review - Generic Schema Matching with Cupid &middot; Notes
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="post">
+  <h1 class="post-title">Paper Review - Generic Schema Matching with Cupid</h1>
+  <span class="post-date">03 Nov 2014</span>
+  <p>While the previous paper told us the hassle that schema matching brought the developer, this paper actually presents a working solution to schema matching, developed by Microsoft. As outlined in the survey paper, schema matching is a pervasive and particularly difficult problem that is best performed by domain expert humans, even if the work is tedious and seemingly brain-dead. This paper describes Cupid, a comprehensive schema matching tool that, much like many of the new databases we study in this class, builds its solution on the partially complete work of others instead of designing a fully novel solution. In this sense we can see it almost like the Gamma project in that it took many incomplete or non-commercial ideas and implemented them into one design. </p>
+
+<p>The paper owes so much of its design to previous schema matchers that it first outlines the various types of matching techniques in use today, followed by the common products available and how they use those techniques. I actually really like this system and wish more papers did this, it presented a very good overview of the previous work in the field. Cupid considers itself most similar to DIKE and MOMIS in terms of general schema matching, and thus compares itself to these packages. Both of these packages are schema matchers that use both element and structure level information. Cupid also seems to mostly take this approach, and so it seems that, like in machine learning, the kitchen sink technique works best in the real world (see Netflix algorithm, etc). The paper outlines the various techniques it uses for both linguistic and structure matching. To deal with similar schema names, Cupid uses a measure of word similarity along with a database of similar words and homonyms to try and match schema that use different but similar labels. For structure matching, Cupid uses a fairly complex system based on structural similarity. This similarity matching uses both the linguistic similarity described previously, as well as the local structure of the schema to make inferences about matching elements. While the first section describes a tree schema, the paper later expands the tree into a graphical model to allow schema to express non-hierarchical possibilities. This map acts as a directed graph, allowing three different types of nodes that can describe one to one, one to many, and inheritance relationships. While no doubt this model is powerful, it introduces a considerable amount of complexity. The paper finally outlines other features and compares Cupid to other schema matchers.</p>
+
+<p>One weakness of this paper is possibly owed to its release date (2001), but its linguistic model seems quite limited. The paper uses a thesaurus to determine abbreviations and similar words, but these are only useful in an academic sense. A better solution would be to create a translation mapping using real world data, such as something you would use in the Google “did you mean” algorithm. This would allow for the variability of human writing, as well as provide a constantly evolving solution for slang and new words or abbreviations. I’m also surprised that the similarity of the tree is not computed in a probabilistic sense. The authors structure identification is inherently a deterministic process, and thus is likely to make more errors compared to a system that could be run multiple times with different parameters (until convergence) to allow for higher accuracy. I do think the biggest strength is still probably in the structure mapping technique, however, and I like the idea of using a directed graph for a schema model, as this creates a very general framework.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/11/11/">
+            Classic Optimization
+            <small>11 Nov 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/14/eecs583/">
+            Pin Paper
+            <small>14 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/eecs583/2015/10/12/">
+            Paper Reviews 1 and 2
+            <small>12 Oct 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+    </div>
+
+  </body>
+</html>

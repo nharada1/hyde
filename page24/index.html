@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Notes &middot; Class notes for Nate Harada
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+
+  <!-- LaTeX Support -->
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+
+  <body>
+
+    <div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          Notes
+        </a>
+      </h1>
+      <p class="lead">Class notes for Nate Harada</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item" href="/">Home</a>
+      <a class="sidebar-nav-item" href="about">About</a>
+      <a class="sidebar-nav-item" href="http://blog.nateharada.com">Blog</a>
+
+      <p></p>
+      
+          <a class="sidebar-nav-item" href="/categories/eecs492">EECS492</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs598">EECS598</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs584">EECS584</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs545">EECS545</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs586">EECS586</a> 
+      
+          <a class="sidebar-nav-item" href="/categories/eecs583">EECS583</a> 
+      
+
+    </nav>
+
+    <p>&copy; 2015. All rights reserved.</p>
+  </div>
+</div>
+
+
+    <div class="content container">
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/08/eecs584/">
+        Paper Review - Self-selecting, Self-tuning, Incrementally Optimized Indexes
+      </a>
+    </h1>
+
+    <span class="post-date">08 Sep 2014</span>
+
+    <p>Our first truly modern technical paper, Graefe and Kuno’s 2010 publication on adaptive indexes provides an efficient technique for automatic index generation and maintenance. </p>
+
+<p>As modern databases continue to grow to massive scales, access becomes more and more time consuming. Even an O(n) search complexity afforded by a simple scan is too slow when a table can contain millions of entries. Data structures known as indexes can solve this problem by creating a second structure for each column that allows faster access, for example a B-tree. This speed comes at an expense however - the index must be constructed for each column and may occasionally need to be optimized. </p>
+
+<p>Solutions exist to automatically reindex columns or monitor performance, but this requires a large operation whenever one of these reindexes is deemed necessary. Additionally, many of these tools require a highly trained and potentially expensive database administrator for the system. A proposed solution is to build the index on the fly, creating and improving index structure based on access to that column. This paper builds on previous work, a technique known as “Database Cracking”, but instead of partitioning at each query the algorithm performs a merge step. Database cracking allows for an adaptive index, but is limiting in cases where the entire database index will not fit into local memory. Adaptive filtering is specifically targeted towards architectures where the index resides of disk, as is the case for extremely large databases.</p>
+
+<p>Adaptive merging starts by creating sorted partitions from the raw data, sorted via quicksort and represented by a partitioned B-tree. The partition size is determined by the amount of physical memory available. Then incoming query ranges search each (sorted) partition and combine all results into a new “merge” partition. Additional queries select more data from the partitions and are merged into the final partition. Eventually all data will be contained in this final partition and the result will be a fully optimized index structure. Because the underlying data structure is the well-studied B-tree, traditional locking and logging structures can be used. Updates such as inserts and deletions can proceed traditionally or using optimized algorithms for small transactions.</p>
+
+<p>Performance compared to database cracking appears good, and the algorithm is especially useful in its primary use case which is for large, block access disk devices. The overhead of primary partition creation is heavy for adaptive indexing, but if the quicksort operation can fit on primary memory, the resulting structure is very efficient compared to its partition-based sibling. Unlike database cracking, adaptive indexing’s performance varies based on query range size - smaller query ranges are much less efficient. For systems where stability is important, cracking may be a better option. I would have also liked to see the tests performed on other types of data: the tests in the paper were done with permutations of consecutive integers. It would have been good to see, for example, performance on a database with many similar values or low cardinality.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/07/eecs584-2/">
+        Paper Review - R-Trees
+      </a>
+    </h1>
+
+    <span class="post-date">07 Sep 2014</span>
+
+    <p>This paper is the seminal paper for the R-Tree, published in 1984 by Antonin Guttman at Berkeley. At the time of writing, current indexing structures could not easily support spatial data such as CAD or mapping data. One dimensional data structures fail on multiple dimensions, and multi-dimensional methods generally fail for practical considerations (ie memory or time complexity) or cannot support ranges of data. The R-tree represents objects by intervals in multiple dimensions.</p>
+
+<p>The R-tree is similar to a B-tree, but instead of each leaf containing a single value the leaves of an R-tree contain an n-dimensional rectangle which is the bounding box of the spatial object the node indexes. Each parent node contains the children of that node, as well as the bounding box over all of the children. We can search through the tree by recursively searching for children which intersect the query bounding box S. At each leaf node of the qualifying children, we again check for intersection with S and if the leaf qualifies we add the leaf to the set of qualifying records. </p>
+
+<p>Insertion proceeds similar to a B-tree, except that splitting a node requires a heuristic process to limit to search space of the optimal case. The paper introduces a “quadratic search” as well as a “linear search” and compares the two - linear search exhibits faster inserts but similar resulting search performance. Deletion proceeds by removing the leaf, and if the resulting node is too small by re-inserting the orphan leaves into the next higher tier. </p>
+
+<p>Guttman’s R-tree is impressive, and its utilization in modern indexing systems demonstrates its power. The algorithm presentation is particularly concise and easy to read. Nonetheless, the paper exhibits a few weaknesses. One common criticism of R-trees is that while searching multiple subtrees under a node may be visited. This means that worst-case performance is impossible to guarantee. Guttman does assert this fact, and additional research after publication attempts to add theoretical bounds. In practice, however, the R-tree is fast and efficient, and so the more complex descendants are rarely used.</p>
+
+<p>It would have been beneficial for Guttman to compare his new structure to the other data structures he mentions in his introduction. While he dismisses most of them for one limitation or another, I would like to see some sort of demonstration that, for example, corner stitching is indeed inefficient for random searches of large data. I also thought his graphs seemed quite rough, owing to a small sample size. I would have liked to see both a larger sample size in his final plots, as well as using different input data instead of just one example. It’s likely that the hardware at the time of writing was slow and that the included results alone took a long time to generate. </p>
+
+<p>One final subject that would have been beneficial to touch on are the practical considerations for such an index structure. In a full DBMS, the index structures must support proper locking and logging. Stonebraker claims in “Anatomy of a Database System” that the locking methods used on B+-Trees do not apply to R-trees. Although a full discussion would be out of the scope of the paper there is no mention of this issue even in passing.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/07/eecs584/">
+        Paper Review - Operating System Support for Database Management
+      </a>
+    </h1>
+
+    <span class="post-date">07 Sep 2014</span>
+
+    <p>Another Stonebraker paper, although published considerably earlier than the previous readings, this publication seeks to examining operating system services in the context of database management systems. The paper addresses several problems in operating system facilities when applied to database management. Generally, Stonebraker asserts that operating systems offer too much abstraction over important low level facilities, and that while the operating system offers good general purpose performance and usability, it lacks fine grain control that can be devastating in a high performance database management system. The publication is structured in several parts, and this writeup will discuss potential weaknesses of the paper in each.</p>
+
+<h3 id="buffer-pool-management">Buffer Pool Management</h3>
+<p>Modern operating systems offer a “buffer pool” which acts as a main memory cache for the filesystem. This cache improves performance by both writing to disk in large blocks (less disk writes) and caching frequently accessed disk memory (less disk reads). While beneficial in general computing, the algorithms used (eg LRU) lose performance when faced with typical database tasks. Additionally, the operating system offers no services to assist in crash recovery. To remedy these problems, most DBMSes use their own user space buffer pool, duplicating a significant part of the OS.</p>
+
+<h3 id="the-file-system">The File System</h3>
+<p>Stonebraker argues that character array filesystem representation is not useful to a DBMS, and prefers records management. However, it’s unclear what modern systems implement or how much performance would improve. It’s implied that current DBMSes simply build a records management atop a character array system. The author decrys the extra overhead of using three separate trees for a database filesystem, but simply states “the extra overhead … is probably substantial” without giving much analysis of the situation.</p>
+
+<h3 id="performance">Performance</h3>
+<p>In this section the author presents several options for system architecture, especially the idea of process-per-user vs a server model. This section is quite outdated, but brings up important historical failings that architects had to deal with. Of course, modern operating system support for multithreading is quite good, and in most cases the overhead of thread context switching is low. In the author’s later paper “Anatomy of a Database System”, he presents more modern views of the performance problem and explains that process-per-user is generally now a legacy option. Stonebraker presents a solution to the performance issue, but he fails to recognize that market forces will eventually result in better threading support at the OS level.</p>
+
+<h3 id="consistancy-control">Consistancy Control</h3>
+<p>Operating systems fail to provide appropriate support for fine grain locks and crash recovery. Again, this problem is solved in most DBMSes by providing the support in user space, duplicating functionality. </p>
+
+<h3 id="paged-virtual-memory">Paged Virtual Memory</h3>
+<p>Stonebraker asserts that a large file will have a large page table, resulting in page faults for both the file and the table itself. He offers a solution to chunk files in address space, which would force the DBMS to provide significant bookkeeping. He lacks a solution for dealing with larger files, and offhandedly mentions that page file buffering is also a problem. This section feels unexplored, possibly because Stonebraker recognizes that main memory will increase in capacity quickly (his cited example of a 100K page table not fitting in RAM is laughable today). Still, it would have been beneficial for him to offer references to research on the subject if it existed at the time.</p>
+
+<p>This paper succeeds at its intentions and offers a good overview of OS facilities and the weaknesses inherent when designing a DBMS, especially for the time it was written. However, it does feel rushed in some places where Stonebraker fails to offer adequate solutions or references to potential solutions. </p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/06/eecs584/">
+        Paper Review - Anatomy of a Database System
+      </a>
+    </h1>
+
+    <span class="post-date">06 Sep 2014</span>
+
+    <p>This educational paper, written by Hellerstein and Stonebraker in 2005, serves to provide an overview of the Database Management System (DBMS) and offer lessons in their design to students and researchers. </p>
+
+<p>Relational database management systems are currently the most commonly deployed type of DBMS, and have one of the longest histories in computing, stemming from their use in early mainframes and business computing. Just as the authors argued in “What Goes Around Comes Around”, young researchers and developers who were not present in the early days of databases will likely make similar mistakes as their predecessors. This problem is compounded by the lack of complete information on database systems. The authors argue that because of the driving industry forces behind DBMS implementations, it’s difficult to find an academic treatment of the systems as a whole. This paper attempts to fill that void by providing context for academic examples and a birds eye view of the apparently monolithic database management systems.</p>
+
+<p>As a learning resource, the paper is written in an informative manner and attempts to avoid any clear bias, although we must remember in a critical reading that the authors were responsible for research on Object Relational Database Models and the PostgreSQL project.</p>
+
+<p>This paper is organized into four main sections (a fifth section exists but isn’t included in this copy). These sections are</p>
+
+<ul>
+  <li>Overall architecture</li>
+  <li>Storage Models</li>
+  <li>The Query Processor</li>
+  <li>The Transactional Storage Manager</li>
+</ul>
+
+<h3 id="overall-architecture">Overall Architecture</h3>
+<p>The authors take a look at different architecture models and issues, such as how to split up the processing in the server (processes vs threads) and different historic workarounds (DBMS threads). We see different server setups, from shared memory to shared-nothing and the middleground shared disk. There is a short treatment of admission control (eg how to best degrade performance), and an overview of the modern standard practices.</p>
+
+<h3 id="storage-models">Storage Models</h3>
+<p>This section examines various storage options, the two largest being choosing between direct disk access via the DBMS or operating system disk access via the filesystem. For each option, the two major considerations are spatial control (being able to store sequentially on disk for best performance) and temporal control (being able to tell the system exactly when to write to disk). As a general rule, older systems would manage disk access themselves because operating systems were not yet mature enough to guarantee these controls. Modern operating systems tend to offer better control, but large DBMS products support both options due to legacy.</p>
+
+<h3 id="query-processor">Query Processor</h3>
+<p>The paper now turns to a more detailed discussion of subsystems, starting with the query processor. The processor takes in declarative statements, parses and authorizes the statements, rewires the query to simplify it, and then optimizes the internal representation of the query into a query plan. Finally the executor invokes procedures for the dataflow graph or op-code representation. The executor does this via iterators, which couple the dataflow with control flow. This section also provides a look at how data is located and accessed, as well as modified or deleted. Access methods that change disc data provide additional complications, and this transitions nicely to the final section.</p>
+
+<h3 id="transactional-storage-manager">Transactional Storage Manager</h3>
+<p>The transactional storage manager is a large component of the DBMS that provides concurrency control, recovery, I/O staging, and access methods for organization of data. This section is weak, however, in comparison to the remainder of the paper. This is partly because of the massive scope of this component - the authors assert that an entire undergraduate course in databases is required, as well as a number of other seminal papers. While a full examination of the material would indeed be tedious, a short coverage of some of the history of these methods would be appreciated. The point of this paper is to prevent mistakes by educating students on the history of these systems, and a better treatment of that history would be appreciated.</p>
+
+<p>The remainder of this section addresses ACID transactions, specifically how locking and logging manage the majority of these requirements (consistency is enforced by the query executor). This section is one of the most technical in the paper, and explores specific issues in each of the subsections of the transactional storage manager. There is a discussion of locks vs latches, as well as various isolation levels available in most DBMSes. This section also covers logging, as well as various combinations of issues pertaining to logs and locks together. Like the transactional storage manager itself, this part of the paper is intertwined and quite nuanced.</p>
+
+<h3 id="summary">Summary</h3>
+<p>This paper is written in a manner similar to a textbook, but without some of the background information included in each section. Although this paper attempts to bridge the gap between academia and industrial applications, there is highly technical and complex material that requires requisite background knowledge to understand. I think in some cases it would be have helpful to further explain concepts, instead of simply referencing an equally dense academic paper or product manual. In general, however, the paper is quite good and I especially appreciate the author’s inclusion of typical practice in modern database management systems.</p>
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/eecs584/2014/09/05/eecs584/">
+        Data Models
+      </a>
+    </h1>
+
+    <span class="post-date">05 Sep 2014</span>
+
+    <p>This lecture will cover the paper “Anatomy of a Database System” by Hellerstein and Stonebraker. This paper is a retrospective of different data models and a history of the DBMS space in the past 50 or so years.</p>
+
+<h3 id="the-beginning---hierarchical">The Beginning - Hierarchical</h3>
+<p>The first modern database was IMS, developed by IBM for the Apollo program to keep a BOM for the Saturn V. This database was tree structured; every model required a parent and children. This did a good job of separating local schema from the application but had bad physical independence because it specified an implementation. IMS had other problems because representing relationships were tricky or impossible with the tree. </p>
+
+<p>Additionally it was extremely hard to program because the programmer must do a record at a time search and hand optimize each query.</p>
+
+<h3 id="codasyl---networkgraph">CODASYL - Network/Graph</h3>
+<p>A standard was proposed to fix problems with the IMS model. Called CODASYL, it was a directed graph that made it much easier to model complex relationships. However, the result was so complex that it was slow and complicated to work with. </p>
+
+<h3 id="relational">Relational</h3>
+<p>Ted Codd proposed a new model based on tables. Although is query language was complex, others (including SQL) were proposed. There was heavy pushback from the database community because of the new paradigm, but with IBM’s introduction of DB/2 the model took off and SQL became the de facto query language.</p>
+
+<h3 id="alternatives-and-extensions">Alternatives and Extensions</h3>
+<p>The entity-relationship model was introduced in the mid 70s. This model was less complex than CODASYL but still allowed complex modeling based on relationships with attributes and multiplicities. There was a wave of R++ models which attempted to extend the relational model. Some of the improvements were good (like sets and tuples), but in the end never caught on. </p>
+
+<h3 id="object-oriented">Object Oriented</h3>
+<p>The semantic data model was introduced in the early 80s, and had a ‘class’ relationship system that supported inheritance. Although never adopted, there was a string of object oriented databases that attempted to use OO languages such as C++ to support native database interaction. This too failed as the market was small and niche.</p>
+
+<h3 id="object-relational">Object Relational</h3>
+<p>The first new technique to improve performance, the ORDB allowed the programmer to extend the relational system by specifying his or her own datatypes, operators, and access methods. This was good for things like 2d data or systems that don’t deal with traditional values. Postgres comes out of this model. </p>
+
+<h3 id="schema-first-or-later">Schema First or Later</h3>
+<p>Quick digression to discuss the difference between schema first vs schema later. The authors argue that schema later databases are rare and niche. </p>
+
+<h3 id="semi-structured-and-xml">Semi-structured and XML</h3>
+<p>New models based on XML are out, and while the authors say XML for documents are here to stay they dislike XML for database models and think they’re a CODASYL2. </p>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page25">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page23">Newer</a>
+    
+  
+</div>
+    </div>
+
+  </body>
+</html>
